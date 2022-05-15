@@ -4,8 +4,8 @@ const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 //const refreshdb = require("../models/refresh");
 //REGISTER
-router.post("/register", async(req, res) => {
-  req.body.password=CryptoJS.AES.encrypt(
+router.post("/register", async (req, res) => {
+  req.body.password = CryptoJS.AES.encrypt(
     req.body.password,
     process.env.PASS_SEC
   ).toString();
@@ -51,7 +51,7 @@ router.post("/login", async (req, res) => {
     user_data = {
       ...user_data,
       ["accessToken"]: access_token,
-     // ["refreshToken"]: refresh_token,
+      // ["refreshToken"]: refresh_token,
     };
     return res.status(200).json(user_data);
   } catch (err) {
