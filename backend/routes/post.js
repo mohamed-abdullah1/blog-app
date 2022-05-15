@@ -1,0 +1,139 @@
+const Post = require("../models/Post");
+const {
+  verifyToken,
+  verifyTokenAndPremium,
+  verifyTokenAndAdmin,
+} = require("./verifyToken");
+const ObjectId = require("mongoose").Types.ObjectId;
+const router = require("express").Router();
+
+//CREATE
+
+router.post("/", verifyTokenAndPremium, async (req, res) => {
+  const newPost = new Post(req.body);
+
+  try {
+    const savedPost = await newPost.save();
+    res.status(200).json(savedPost);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//UPDATE
+router.put("/:postId", verifyTokenAndPremium, async (req, res) => {
+  try {
+    const updatedPost = await Post.findOneAndUpdate(
+      { _id: req.params.postId, writer_id: req.user.id },
+      {
+        $set: req.body,
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//DELETE
+router.delete("/:postId", verifyTokenAndPremium, async (req, res) => {
+  try {
+    await Post.findOneAndDelete({
+      _id: req.params.postId,
+      writer_id: req.user.id,
+    });
+    res.status(200).json("Post has been deleted...");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET Post
+router.get("/find/:postId", async (req, res) => {
+  try {
+    // for returning the post with sorted comments based on date
+    // const Post = await Post.aggregate([
+    //   { $match: { _id: ObjectId(req.params.id) } },
+    //   { $unwind: "$reviews" },
+    //   { $sort: { "reviews.date": -1 } },
+    //   { $group: { _id: "$_id", reviews: { $push: "$reviews" } } },
+    // ]);
+    const Post = await Post.findById(req.params.postId);
+    res.status(200).json(Post);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//GET ALL Posts
+router.get("/", async (req, res) => {
+  const qNew = req.query.new;
+  const qCategory = req.query.category;
+  try {
+    let Posts;
+
+    if (qNew) {
+      Posts = await Post.find().sort({ createdAt: -1 }).limit(1);
+    } else if (qCategory) {
+      Posts = await Post.find({
+        categories: {
+          $in: [qCategory],
+        },
+      });
+    } else {
+      Posts = await Post.find();
+    }
+    res.status(200).json(Posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Create a comment
+router.post("/:postId/comments", verifyToken, async (req, res) => {
+  const Post = await Post.findById(req.params.postId);
+  try {
+    Post.comments.push(req.body);
+    const updatedPost = await Post.save();
+    res.status(201).json(updatedPost);
+  } catch (err) {
+    res.status(404).json(err);
+  }
+});
+
+// Add a like or dislike
+router.post("/:postId/likes", verifyToken, async (req, res) => {
+  const Post = await Post.findById(req.params.postId);
+  try {
+    for (let i = 0; i < Post.likes.length; i++) {
+      if (Post.likes[i].user_id === req.user.id) {
+        if (Post.likes[i].like === req.body.like) {
+          //remove it
+          Post.likes.splice(i, 1);
+          if (req.body.like === true) Post.numberOfLikes--;
+          else Post.numberOfDisLikes--;
+        } else {
+          Post.likes[i].like = req.body.like;
+          if (req.body.like === true) {
+            Post.numberOfDisLikes--;
+            Post.numberOfLikes++;
+          } else {
+            Post.numberOfDisLikes++;
+            Post.numberOfLikes--;
+          }
+        }
+        const updatedPost = await Post.save();
+        res.status(201).json(updatedPost);
+      }
+    }
+    Post.likes.push(req.body);
+    if (req.body.like === true) Post.numberOfLikes++;
+    else Post.numberOfDisLikes++;
+    const updatedPost = await Post.save();
+    res.status(201).json(updatedPost);
+  } catch (err) {
+    res.status(404).json(err);
+  }
+});
+module.exports = router;
