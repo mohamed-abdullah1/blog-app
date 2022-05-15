@@ -1,32 +1,33 @@
 const router = require("express").Router();
-const Favorite = require("../models/Favorite");
-const Product = require("../models/Product");
+const Pinned = require("../models/Pinned");
+const Post = require("../models/Post");
 
 const {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
+  verifyTokenAndPremium
 } = require("./verifyToken");
 
-// CREATE Favorite, any user can create the Favorite
-router.post("/", async (req, res) => {
-  const newFavorite = new Favorite(req.body);
+// creating pinned list 
+router.post("/",verifyToken, async (req, res) => {
+  const newPinned = new pinned(req.body);
 
   try {
-    const savedFavorite = await newFavorite.save();
+    const savedPinned = await newPinned.save();
 
-    return res.status(200).json(savedFavorite);
+    return res.status(200).json(savedPinned);
   } catch (err) {
     return res.status(500).json(err);
   }
 });
 
-// UPDATE, user can change its own Favorite
+// UPDATE, user can change its own pinned list
 // put new version
-router.put("/find/:id", async (req, res) => {
+router.put("/find/:id",verifyTokenAndAuthorization, async (req, res) => {
   try {
     console.log("in try of update fav", req.body);
-    const updatedFavorite = await Favorite.findOneAndUpdate(
+    const updatedPinned = await Pinned.findOneAndUpdate(
       { userId: req.params.id },
       {
         $set: req.body,
@@ -34,13 +35,13 @@ router.put("/find/:id", async (req, res) => {
       { new: true }
     );
 
-    return res.status(200).json(updatedFavorite);
+    return res.status(200).json(updatedPinned);
   } catch (err) {
     return res.status(500).json(err);
   }
 });
 
-//DELETE
+//DELETE the pinned list 
 router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
   try {
     await Favorite.deleteOne({ userId: req.params.id });
@@ -51,91 +52,25 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
-// GET USER Favorite
+// GET USER pinned posts
 
-router.get("/find/:id", async (req, res) => {
+router.get("/find/:id",verifyTokenAndAuthorization, async (req, res) => {
   try {
-    const favorite = await Favorite.findOne({ userId: req.params.id });
-    return res.status(200).json(favorite);
+    const pinned = await pinned.findOne({ userId: req.params.id });
+    return res.status(200).json(pinned);
   } catch (err) {
     return res.status(500).json(err);
   }
 });
-
-/*
-router.get("/delete-from-fav/:id", verifyTokenAndAuthorization, async (req,res)=>{
-
-    const userId = req.params.id;
-    const productID = req.body.productID;
-      try{
-        const favorite = await Favorite.findOne({userId:userId }); 
-           
-        let idx = favorite.products.findIndex(p => p.productId === productID);
-        if(idx > -1){
-          favorite.products.splice(idx,1);
-              
-         await favorite.save();
-       }else{
-           return res.status(404).json("No product with this id in the favorite cart");
-       }
-            
-      }catch(err){
-          return res.status(500).json(err);
-      }
-   
-   } );
-
-
-   router.get("/add-to-fav/:id",verifyTokenAndAuthorization,async (req,res)=>{
-    const userId = req.params.id;
-    const productID= req.body.productID;
- 
-     try{
-        const favorite = await Favorite.findOne({userId:userId});
- 
-        if(favorite){
-         let itemIndex = favorite.products.findIndex(p => p.productId === productID);
-          // Check if product exists or not
-          if(itemIndex > -1)
-          {
-            return res.status(201).json("already exists");
-           
-          }else{
-            favorite.products.push({ productID: productID});
-             
-          }
-          
-      await favorite.save();
-      return res.status(201).send(favorite);
-        }else{
-
- 
-         const newFavorite = await Favorite.create({
-             userId,
-             products: [{ productID : productID }]
-         });
-              
-         return res.status(201).send(newFavorite);
-        }
-       
-     }catch(err){
-         return res.status(500).json(err);
-     }
- 
- });
- 
-
-
-
-*/
-
-router.get("/", async (req, res) => {
+//get all pinned post lists of all users
+router.get("/",verifyTokenAndAdmin, async (req, res) => {
   try {
-    const favorites = await Favorite.find();
-    return res.status(200).json(favorites);
+    const pinned = await pinned.find();
+    return res.status(200).json(pinned);
   } catch (err) {
     return res.status(500).json(err);
   }
 });
 
 module.exports = router;
+
