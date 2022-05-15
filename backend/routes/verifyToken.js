@@ -3,6 +3,17 @@ const jwt = require("jsonwebtoken");
 const verifyToken = (req, res, next) => {
   const token = req.headers.token.split(" ")[1];
   if (token) {
+    jwt.verify(token, process.env.JWT_SEC, (err, user) => {
+      if (err) return res.status(403).json("invalid token");
+      req.user = user;
+      next();
+    });
+  } else {
+    return res.status(403).json("you need authorization");
+  }
+  /*
+  in case of tokens have expiring date and there's a refresh token
+  if (token) {
     tok = token.split(".")[1];
     tok = JSON.parse(atob(tok));
     tok = new Date(tok.exp * 1000);
@@ -19,11 +30,12 @@ const verifyToken = (req, res, next) => {
   } else {
     return res.status(403).json("you need authorization");
   }
+  */
 };
 
 const verifyTokenAndAuthorization = (req, res, next) => {
   verifyToken(req, res, () => {
-    if (req.user.id === req.params.id || req.user.credential==2) {
+    if (req.user.id === req.params.id || req.user.credential == 2) {
       next();
     } else {
       res.status(403).json("You are not allowed to do that!");
@@ -32,7 +44,7 @@ const verifyTokenAndAuthorization = (req, res, next) => {
 };
 const verifyTokenAndPremium = (req, res, next) => {
   verifyToken(req, res, () => {
-    if (req.user.credential>=1) {
+    if (req.user.credential >= 1) {
       next();
     } else {
       res.status(403).json("You are not allowed to do that!");
@@ -42,7 +54,7 @@ const verifyTokenAndPremium = (req, res, next) => {
 
 const verifyTokenAndAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
-    if (req.user.credential==2) {
+    if (req.user.credential == 2) {
       next();
     } else {
       res.status(403).json("You are not allowed to do that!");
@@ -54,5 +66,5 @@ module.exports = {
   verifyToken,
   verifyTokenAndAuthorization,
   verifyTokenAndAdmin,
-  verifyTokenAndPremium
+  verifyTokenAndPremium,
 };
