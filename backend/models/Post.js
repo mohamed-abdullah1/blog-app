@@ -15,7 +15,7 @@ const LikeSchema = mongoose.Schema({
 
 const PostSchema = new mongoose.Schema(
   {
-    writer_id: { type: String, required: true, unique: true },
+    writer_id:{type:String , required:true , unique:true},
     title: { type: String, required: true, unique: true },
     desc: { type: String, required: true },
     content: { type: String, required: true },
