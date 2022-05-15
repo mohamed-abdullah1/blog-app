@@ -37,7 +37,7 @@ router.delete("/:name", verifyTokenAndAdmin, async (req, res) => {
 
 
 
-router.get("/",verifyTokenAndAuthorization ,async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const category = await Category.find();
     return res.status(200).json(category);
