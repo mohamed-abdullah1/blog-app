@@ -6,6 +6,7 @@ import NewsLetter from "./Components/NewsLetter";
 import Footer from "./Components/Footer";
 import Post from "./Pages/Post";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ExForCKEditor from "./Pages/ExForCKEditor";
 function App() {
   const theme = {
     colors: {
@@ -37,6 +38,7 @@ function App() {
               {/* <Post /> */}
               <Route path="/" element={<Home />} />
               <Route path="post/:postId" element={<Post />} />
+              <Route path="ckeditor" element={<ExForCKEditor />} />
             </Routes>
           </div>
           <NewsLetter />

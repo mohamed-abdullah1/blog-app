@@ -55,7 +55,7 @@ const Catagories = () => {
           {loading ? (
             <PuffLoader size={30} color="black" />
           ) : (
-            sportsPosts.map((post) => (
+            sportsPosts?.map((post) => (
               <Post key={post.id}>
                 <ImgContainer>
                   <img src={post?.imgUrl} />
@@ -85,7 +85,7 @@ const Catagories = () => {
           {loading ? (
             <PuffLoader size={30} color="black" />
           ) : (
-            businessPosts.map((post) => (
+            businessPosts?.map((post) => (
               <Post key={post.id}>
                 <ImgContainer>
                   <img src={post?.imgUrl} />
