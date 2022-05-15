@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema(
     credential: { type: Number, required: true,default:0 },
     avatar: { type: String },
     job: { type: String },
-    interests: { type: String },
+    interests: { type: Array },
     facebook_account: { type: String },
     twitter_account: { type: String },
     linkedin_account: { type: String },
