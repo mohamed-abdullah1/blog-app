@@ -9,7 +9,7 @@ const router = require("express").Router();
 //const refreshdb = require("../models/refresh");
 const CryptoJS = require("crypto-js");
 //UPDATE
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
       req.body.password,
@@ -42,7 +42,7 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //GET USER
-router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
+router.get("/find/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     const { password, ...others } = user._doc;
