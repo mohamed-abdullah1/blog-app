@@ -23,8 +23,9 @@ router.post("/", verifyTokenAndPremium, async (req, res) => {
 //UPDATE
 router.put("/:postId", verifyTokenAndPremium, async (req, res) => {
   try {
+    console.log(req.user);
     const updatedPost = await Post.findOneAndUpdate(
-      { _id: req.params.postId, writer_id: req.user.id },
+      { _id: req.params.postId, writer_id: req.user._id },
       {
         $set: req.body,
       },
@@ -41,7 +42,7 @@ router.delete("/:postId", verifyTokenAndPremium, async (req, res) => {
   try {
     await Post.findOneAndDelete({
       _id: req.params.postId,
-      writer_id: req.user.id,
+      writer_id: req.user._id,
     });
     res.status(200).json("Post has been deleted...");
   } catch (err) {
@@ -53,14 +54,14 @@ router.delete("/:postId", verifyTokenAndPremium, async (req, res) => {
 router.get("/find/:postId", async (req, res) => {
   try {
     // for returning the post with sorted comments based on date
-    // const Post = await Post.aggregate([
+    // const post = await Post.aggregate([
     //   { $match: { _id: ObjectId(req.params.id) } },
     //   { $unwind: "$reviews" },
     //   { $sort: { "reviews.date": -1 } },
     //   { $group: { _id: "$_id", reviews: { $push: "$reviews" } } },
     // ]);
-    const Post = await Post.findById(req.params.postId);
-    res.status(200).json(Post);
+    const post = await Post.findById(req.params.postId);
+    res.status(200).json(post);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -92,10 +93,11 @@ router.get("/", async (req, res) => {
 
 // Create a comment
 router.post("/:postId/comments", verifyToken, async (req, res) => {
-  const Post = await Post.findById(req.params.postId);
+  const post = await Post.findById(req.params.postId);
   try {
-    Post.comments.push(req.body);
-    const updatedPost = await Post.save();
+    console.log(req.body);
+    post.comments.push(req.body);
+    const updatedPost = await post.save();
     res.status(201).json(updatedPost);
   } catch (err) {
     res.status(404).json(err);
@@ -104,36 +106,36 @@ router.post("/:postId/comments", verifyToken, async (req, res) => {
 
 // Add a like or dislike
 router.post("/:postId/likes", verifyToken, async (req, res) => {
-  const Post = await Post.findById(req.params.postId);
+  const post = await Post.findById(req.params.postId);
   try {
-    for (let i = 0; i < Post.likes.length; i++) {
-      if (Post.likes[i].user_id === req.user.id) {
-        if (Post.likes[i].like === req.body.like) {
+    for (let i = 0; i < post.likes.length; i++) {
+      if (post.likes[i].user_id === req.user._id) {
+        if (post.likes[i].like === req.body.like) {
           //remove it
-          Post.likes.splice(i, 1);
-          if (req.body.like === true) Post.numberOfLikes--;
-          else Post.numberOfDisLikes--;
+          post.likes.splice(i, 1);
+          if (req.body.like === true) post.numberOfLikes--;
+          else post.numberOfDisLikes--;
         } else {
-          Post.likes[i].like = req.body.like;
+          post.likes[i].like = req.body.like;
           if (req.body.like === true) {
-            Post.numberOfDisLikes--;
-            Post.numberOfLikes++;
+            post.numberOfDisLikes--;
+            post.numberOfLikes++;
           } else {
-            Post.numberOfDisLikes++;
-            Post.numberOfLikes--;
+            post.numberOfDisLikes++;
+            post.numberOfLikes--;
           }
         }
-        const updatedPost = await Post.save();
-        res.status(201).json(updatedPost);
+        const updatedPost = await post.save();
+        return res.status(201).json(updatedPost);
       }
     }
-    Post.likes.push(req.body);
-    if (req.body.like === true) Post.numberOfLikes++;
-    else Post.numberOfDisLikes++;
-    const updatedPost = await Post.save();
+    post.likes.push(req.body);
+    if (req.body.like === true) post.numberOfLikes++;
+    else post.numberOfDisLikes++;
+    const updatedPost = await post.save();
     res.status(201).json(updatedPost);
   } catch (err) {
-    res.status(404).json(err);
+    return res.status(404).json(err);
   }
 });
 module.exports = router;
