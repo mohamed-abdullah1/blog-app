@@ -14,7 +14,7 @@ import {
   Wrapper,
   WriterInfo,
 } from "./styles/Catagories.styled";
-import PuffLoader from "react-spinners/PuffLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 
 const POSTS_URL = "/posts";
 
@@ -40,10 +40,10 @@ const Catagories = () => {
             .slice(0, 3)
         );
         console.log(businessPosts, sportsPosts);
+        setLoading(false);
       })
       .catch((err) => setError(err))
       .finally(() => {
-        setLoading(false);
         console.log(error);
       });
   }, []);
@@ -53,7 +53,7 @@ const Catagories = () => {
         <h2>Sports</h2>
         <Posts>
           {loading ? (
-            <PuffLoader size={30} color="black" />
+            <MoonLoader size={30} color="black" />
           ) : (
             sportsPosts?.map((post) => (
               <Post key={post.id}>
@@ -83,7 +83,7 @@ const Catagories = () => {
         <h2>Business</h2>
         <Posts>
           {loading ? (
-            <PuffLoader size={30} color="black" />
+            <MoonLoader size={30} color="black" />
           ) : (
             businessPosts?.map((post) => (
               <Post key={post.id}>

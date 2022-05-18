@@ -123,3 +123,34 @@ export const NavMenuIcon = styled.div`
   justify-content: center;
 `;
 export const NavMenuTitle = styled.div``;
+
+export const NavMenuContainerUser = styled.div`
+  position: absolute;
+  right: -100vw;
+  transition: all 0.5s ease-out;
+  width: 20vw;
+  height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  top: 0;
+  right: ${(props) => (props.viewUserInfo ? "-0vw" : "-100vw")};
+  z-index: 1;
+  background-color: white;
+  padding: 10px;
+  & > ul {
+  }
+  & > ul > li {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    width: 20%;
+    font-weight: 300;
+    margin-bottom: 20px;
+    cursor: pointer;
+    &:hover {
+      color: ${(props) => props.theme.colors.secondary};
+    }
+  }
+`;
+export const PersonIconContainer = styled.div`
+  cursor: pointer;
+`;

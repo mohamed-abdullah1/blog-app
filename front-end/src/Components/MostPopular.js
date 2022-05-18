@@ -13,7 +13,7 @@ import {
   WriterInfo,
   Posts,
 } from "./styles/MostPopular.styled";
-import PuffLoader from "react-spinners/PuffLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 
 //identify the route of posts
 const POSTS_URL = "/posts";
@@ -28,10 +28,10 @@ const MostPopular = () => {
       .get(POSTS_URL)
       .then((res) => {
         setPosts(res.data);
+        setLoading(false);
       })
       .catch((err) => setError(err))
       .finally(() => {
-        setLoading(false);
         console.log(error);
       });
   }, []);
@@ -39,7 +39,7 @@ const MostPopular = () => {
     <Wrapper>
       <h1>Most Popular Posts</h1>
       {loading ? (
-        <PuffLoader size={30} color="black" />
+        <MoonLoader loading={loading} size={30} color="black" />
       ) : (
         <Posts>
           {posts?.map((post) => (

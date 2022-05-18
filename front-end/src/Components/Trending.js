@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../Api/axios";
-import PuffLoader from "react-spinners/PuffLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 import {
   Avatar,
   Buttons,
@@ -32,10 +32,10 @@ const Trending = () => {
       .get(POSTS_URL)
       .then((res) => {
         setPosts(res.data);
+        setLoading(false);
       })
       .catch((err) => setError(err))
       .finally(() => {
-        setLoading(false);
         console.log(error);
       });
   }, []);
@@ -59,7 +59,7 @@ const Trending = () => {
   return (
     <div>
       {loading ? (
-        <PuffLoader size={30} color="black" />
+        <MoonLoader loading={loading} size={30} color="black" />
       ) : (
         <Wrapper>
           <h1>Trending</h1>

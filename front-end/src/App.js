@@ -6,7 +6,12 @@ import NewsLetter from "./Components/NewsLetter";
 import Footer from "./Components/Footer";
 import Post from "./Pages/Post";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import ExForCKEditor from "./Pages/ExForCKEditor";
+import MakePost from "./Pages/MakePost";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import NotFound from "./Pages/NotFound";
+import Profile from "./Pages/Profile";
+import Pay from "./Pages/Pay";
 function App() {
   const theme = {
     colors: {
@@ -34,11 +39,14 @@ function App() {
           <div style={{ maxWidth: "1500px", width: "100%" }}>
             <Global />
             <Routes>
-              {/* <Home /> */}
-              {/* <Post /> */}
               <Route path="/" element={<Home />} />
               <Route path="post/:postId" element={<Post />} />
-              <Route path="ckeditor" element={<ExForCKEditor />} />
+              <Route path="ckeditor" element={<MakePost />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="profile/:id" element={<Profile />} />
+              <Route path="pay" element={<Pay />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
           <NewsLetter />

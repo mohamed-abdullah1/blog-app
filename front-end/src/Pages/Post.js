@@ -255,7 +255,7 @@ const Post = () => {
           </RelatedImgContainer>
           <RelatedInfoContainer>
             <DateAndCats>
-              <span>{post.catagories.join(" - ")}</span>
+              <span>{post?.catagories.join(" - ")}</span>
               <span> {post?.date}</span>
             </DateAndCats>
             <RelatedTitle>{post?.title}</RelatedTitle>
