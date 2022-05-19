@@ -15,22 +15,32 @@ import {
 import { FaFacebookF, FaTimes } from "react-icons/fa";
 import { AiOutlineHome, AiOutlineTwitter } from "react-icons/ai";
 import { BsInstagram } from "react-icons/bs";
-import { BiSearchAlt } from "react-icons/bi";
-import { GrArticle } from "react-icons/gr";
 import { CgMathMinus } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import LoginIcon from "@mui/icons-material/Login";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import Search from "./Search";
+import { useDispatch, useSelector } from "react-redux";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { logout } from "../Redux/userSlice";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 const Nav = () => {
   //states and variables
   const [viewSlider, setViewSlider] = useState(false);
   const [viewUserInfoSlider, setUserInfoSlider] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   //functions
   const handleSlider = () => setViewSlider((prevView) => !prevView);
   const handleUserSlider = () => setUserInfoSlider((prev) => !prev);
   const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+    //pinned posts
+  };
   return (
     <>
       <NavContainer>
@@ -81,20 +91,43 @@ const Nav = () => {
             <CrossIcon onClick={handleUserSlider}>
               <FaTimes />
             </CrossIcon>
-            <ul>
-              <li onClick={() => navigate("/login")}>
-                <NavMenuIcon>
-                  <LoginIcon />
-                </NavMenuIcon>
-                <NavMenuTitle>Login</NavMenuTitle>
-              </li>
-              <li onClick={() => navigate("/register")}>
-                <NavMenuIcon>
-                  <AppRegistrationIcon />
-                </NavMenuIcon>
-                <NavMenuTitle>Register</NavMenuTitle>
-              </li>
-            </ul>
+            {currentUser ? (
+              <ul>
+                <li onClick={() => navigate(`profile/${currentUser._id}`)}>
+                  <NavMenuIcon>
+                    <AccountCircleIcon />
+                  </NavMenuIcon>
+                  <NavMenuTitle>{currentUser?.username}</NavMenuTitle>
+                </li>
+                <li onClick={() => navigate(`makePost`)}>
+                  <NavMenuIcon>
+                    <PostAddIcon />
+                  </NavMenuIcon>
+                  <NavMenuTitle>Make Post</NavMenuTitle>
+                </li>
+                <li onClick={handleLogout}>
+                  <NavMenuIcon>
+                    <LogoutIcon />
+                  </NavMenuIcon>
+                  <NavMenuTitle>logout</NavMenuTitle>
+                </li>
+              </ul>
+            ) : (
+              <ul>
+                <li onClick={() => navigate("/login")}>
+                  <NavMenuIcon>
+                    <LoginIcon />
+                  </NavMenuIcon>
+                  <NavMenuTitle>Login</NavMenuTitle>
+                </li>
+                <li onClick={() => navigate("/register")}>
+                  <NavMenuIcon>
+                    <LoginIcon />
+                  </NavMenuIcon>
+                  <NavMenuTitle>Register</NavMenuTitle>
+                </li>
+              </ul>
+            )}
           </NavMenuContainerUser>
         </NavbarContainer>
       </NavContainer>

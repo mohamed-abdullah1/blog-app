@@ -142,7 +142,7 @@ export const NavMenuContainerUser = styled.div`
     list-style-type: none;
     display: flex;
     justify-content: space-between;
-    width: 20%;
+    width: 50%;
     font-weight: 300;
     margin-bottom: 20px;
     cursor: pointer;

@@ -41,19 +41,19 @@ Admin
 
 TO DOs:-
 For Users
-    1- build redux for the userSlice == 40min
+    //1- build redux for the userSlice == 40min
         -userInfo
         -posts_id //no need
         -pinned_posts //no need
-    2- register functionality ==  40min
+    //2- register functionality ==  40min
         -> don't send post req until he subscribe using stripe 
-    3- login functionality == 10min
+    //3- login functionality == 10min
     
-    4- add RequestAuth in the routing for admin and users and unregistered users == 30min
-    5- build and add the makePost page ==60min
-    8- build edit page-->maybe it will be the same as makePost ==40min
-    6- enable  the premier or admin to delete his posts 
-    7- enable edit also
+    //4- add RequestAuth in the routing for admin and users and unregistered users == 30min
+    //5- build and add the makePost page ==60min  -->the functionality 
+    //8- build edit page-->maybe it will be the same as makePost ==40min
+    //6- enable  the premier or admin to delete his posts 
+    //7- enable edit also
 
     9- add functionality to the home page like:- ==50min
         -edit catagories
@@ -62,6 +62,7 @@ For Users
     10- add functionality in the post page   ==60min
         -make comment 
         -make like
+        
     11- add a pinned page to view all pinned posts ==50min 
         -add a pinned icon to all posts in post page
         -view pinned posts in the pinned page

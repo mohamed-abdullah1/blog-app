@@ -1,6 +1,6 @@
 import styled from "styled-components";
 export const Wrapper = styled.div`
-  height: 200vh;
+  height: 100%;
 `;
 //info styles
 export const InfoWrapper = styled.div`
@@ -9,7 +9,7 @@ export const InfoWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 0px 0;
 `;
 export const AvatarImg = styled.div`
   width: 200px;
@@ -42,11 +42,14 @@ export const SocialIcons = styled.div`
 export const Icon = styled.div`
   cursor: pointer;
   transform: scale(1.2);
-  &:hover {
-    color: ${(props) => props.type === "facebook" && "#4267B2"};
-    color: ${(props) => props.type === "youtube" && "#FF0000"};
-    color: ${(props) => props.type === "twitter" && "#1da1f2"};
-    color: ${(props) => props.type === "linkedin" && "#0A66c2"};
+  & > a {
+    color: "black";
+    &:hover {
+      color: ${(props) => props.type === "facebook" && "#4267B2"};
+      color: ${(props) => props.type === "youtube" && "#FF0000"};
+      color: ${(props) => props.type === "twitter" && "#1da1f2"};
+      color: ${(props) => props.type === "linkedin" && "#0A66c2"};
+    }
   }
 `;
 //posts and post
@@ -66,6 +69,7 @@ export const Post = styled.div`
   width: 100%;
   margin-bottom: 20px;
   height: 200px;
+  cursor: pointer;
 `;
 export const ImgContainer = styled.div`
   width: 22%;
@@ -91,7 +95,7 @@ export const DateAndCats = styled.div`
     margin-right: 9px;
   }
   & > span:nth-child(1) {
-    font-weight: 800;
+    font-weight: 600;
   }
   & > span:nth-child(2) {
     color: ${(props) => props.theme.colors.gray};
@@ -106,14 +110,24 @@ export const Title = styled.div`
 export const WriterInfo = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 18%;
+  width: 15%;
   margin-top: 15px;
+`;
+export const Content = styled.div`
+  padding-top: 10px;
+  font-size: 14px;
+  color: ${(props) => props.theme.colors.darkGray};
 `;
 export const Avatar = styled.div`
   height: 35px;
   width: 35px;
-  background-color: ${(props) => props.theme.colors.whiteGray};
-  border-radius: 50%;
+  cursor: pointer;
+  & > img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 export const Info = styled.div`
   & > div:nth-child(1) {
@@ -122,5 +136,32 @@ export const Info = styled.div`
   & > div:nth-child(2) {
     font-size: 13px;
     color: ${(props) => props.theme.colors.darkGray};
+  }
+`;
+export const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+export const Buttons = styled.div`
+  display: flex;
+  width: 22%;
+  justify-content: space-between;
+  align-items: flex-end;
+  & > button {
+    width: 60px;
+    height: 30px;
+    border-radius: 20px;
+    background-color: #f79918;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: 0.1s all ease-in-out;
+    &:hover {
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    }
+  }
+  & > button:last-child {
+    background-color: #d30000;
   }
 `;

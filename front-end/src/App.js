@@ -12,6 +12,7 @@ import Register from "./Pages/Register";
 import NotFound from "./Pages/NotFound";
 import Profile from "./Pages/Profile";
 import Pay from "./Pages/Pay";
+import RequestAuth from "./Helper/RequestAuth";
 function App() {
   const theme = {
     colors: {
@@ -39,11 +40,13 @@ function App() {
           <div style={{ maxWidth: "1500px", width: "100%" }}>
             <Global />
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="post/:postId" element={<Post />} />
-              <Route path="ckeditor" element={<MakePost />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
+              <Route element={<RequestAuth />}>
+                <Route path="makePost" element={<MakePost />} />
+              </Route>
+              <Route path="/" element={<Home />} />
+              <Route path="post/:postId" element={<Post />} />
               <Route path="profile/:id" element={<Profile />} />
               <Route path="pay" element={<Pay />} />
               <Route path="*" element={<NotFound />} />

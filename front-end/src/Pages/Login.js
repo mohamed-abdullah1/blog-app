@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-// import { login } from "../redux/apiCall";
-// import { useDispatch, useSelector } from "react-redux";
+import { loginStart, loginSuccess, loginFailure } from "../Redux/userSlice";
+import axios from "../Api/axios";
 import { useForm } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -15,7 +15,6 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../Redux/apiCall";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,18 +29,22 @@ const Login = () => {
     register,
     formState: { errors },
   } = useForm({ resolver: yupResolver(validationSchema) });
-  const onSubmit = async (data) => {
+
+  const onSubmit = (data) => {
     console.log("data", data);
-    try {
-      await login(dispatch, data);
-      if (!error.trueOrFalse) {
+    dispatch(loginStart());
+    axios
+      .post("auth/login", data)
+      .then((res) => {
+        dispatch(loginSuccess(res.data));
+      })
+      .then((res) => {
         navigate("/");
-      }
-    } catch (err) {
-      if (error.trueOrFalse) {
-        alert(`error.msg`);
-      }
-    }
+      })
+      .catch((err) => {
+        dispatch(loginFailure("Unauthorized"));
+        alert(`${error.msg} , Try again`);
+      });
     console.log(data);
   };
   return (

@@ -76,7 +76,7 @@ const Register = () => {
     }
     if (credential === 0) {
       axios
-        .post("/api/auth/register", { interests, credential, ...formData })
+        .post("auth/register", { interests, credential, ...formData })
         .then((res) => {
           console.log(res);
           navigate("/login");

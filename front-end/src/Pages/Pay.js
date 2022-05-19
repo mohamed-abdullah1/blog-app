@@ -20,7 +20,7 @@ const Pay = () => {
     console.log("token", token);
     const asyncReq = async (token) => {
       try {
-        const res = await axios.post("/api/checkout/payment/", {
+        const res = await axios.post("checkout/payment/", {
           amount: 70,
           token,
         });
@@ -28,7 +28,7 @@ const Pay = () => {
         if (res.status === 200) {
           setLoading(true);
           axios
-            .post("/api/auth/register/", { ...location.state })
+            .post("auth/register/", { ...location.state })
             .then((res) => {
               console.log(res);
               navigate("/login");

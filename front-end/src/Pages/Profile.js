@@ -2,6 +2,7 @@ import {
   AboutMe,
   Avatar,
   AvatarImg,
+  Content,
   DateAndCats,
   Icon,
   ImgContainer,
@@ -16,6 +17,8 @@ import {
   Username,
   Wrapper,
   WriterInfo,
+  Container,
+  Buttons,
 } from "./styles/Profile.styled";
 import axios from "../Api/axios";
 import { useEffect, useState } from "react";
@@ -24,83 +27,188 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import { useSelector } from "react-redux";
+import Loading from "../Components/Loading";
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 const Profile = () => {
+  //variables
   const [user, setUser] = useState();
   const [posts, setPosts] = useState();
   const [loading, setLoading] = useState(true);
   const { id: idParam } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useSelector((state) => state.user);
+  //functions
+  const extractDate = (date) => {
+    let year = date.slice(0, 4);
+    let month_ = date.slice(5, 7);
+    let month = MONTHS.filter((item, index) => index + 1 === Number(month_))[0];
+    let day = date.slice(8, 10);
+    return { month, day, year };
+  };
+  const handleNavigate = (post) => {
+    navigate(`/post/${post._id}`, { state: post });
+  };
   useEffect(() => {
     setLoading(true);
     axios
-      .get("/users/")
+      .get(`users/find/${idParam}`)
       .then((res) => {
-        console.log("users", res.data, Number(idParam));
-        const users = res.data;
-        setUser(users.find((item) => item.id === Number(idParam)));
-        return axios.get("/posts");
+        console.log(res);
+        setUser(res.data);
+        return axios.get("posts/");
       })
       .then((res) => {
-        console.log("posts", res.data);
-        const posts_ = res.data;
-        setPosts(posts_.filter((item) => item?.writer_id === Number(idParam)));
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
+        console.log("posts", res);
+        setPosts(res.data.filter((item) => item?.writer_id === idParam));
         setLoading(false);
-        console.log("user", user);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert(`can't fetch the profile try again..`);
+      })
+      .finally(() => {
         console.log("posts", posts);
       });
   }, []);
   return (
     <Wrapper>
-      <InfoWrapper>
-        <AvatarImg>
-          <img src={user?.avatar} />
-        </AvatarImg>
-        <Username>{user?.username}</Username>
-        <Job>{user?.job}</Job>
-        <AboutMe>{user?.interests.join(" - ")}</AboutMe>
-        <SocialIcons>
-          <Icon type="facebook">
-            <FacebookIcon />
-          </Icon>
-          <Icon type="youtube" onClick={() => navigate("/youtube")}>
-            <YouTubeIcon />
-          </Icon>
-          <Icon type="twitter">
-            <TwitterIcon />
-          </Icon>
-          <Icon type="linkedin">
-            <LinkedInIcon />
-          </Icon>
-        </SocialIcons>
-      </InfoWrapper>
-      <Posts>
-        <h1>Posts</h1>
-        {posts?.map((post) => (
-          <Post key={post?.id}>
-            <ImgContainer>
-              <img src={post?.imgUrl} />
-            </ImgContainer>
-            <InfoContainer>
-              <DateAndCats>
-                {/* <span>{post?.catagories.join(" - ")}</span> */}
-                <span> {post?.date}</span>
-              </DateAndCats>
-              <Title>{post?.title}</Title>
-              <WriterInfo>
-                <Avatar></Avatar>
-                <Info>
-                  <div>{post?.username}</div>
-                  <div>{post?.userJob}</div>
-                </Info>
-              </WriterInfo>
-            </InfoContainer>
-          </Post>
-        ))}
-      </Posts>
+      {loading ? (
+        <Loading size={40} alignItemsCenter={true} />
+      ) : (
+        <>
+          <InfoWrapper>
+            <AvatarImg>
+              <img src={user?.avatar} alt={"user img"} />
+            </AvatarImg>
+            <Username>{user?.username}</Username>
+            <Job>{user?.job}</Job>
+            <AboutMe>{user?.interests.join(" - ")}</AboutMe>
+            <SocialIcons>
+              <Icon type="facebook">
+                <a
+                  style={{ color: "black" }}
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FacebookIcon />
+                </a>
+              </Icon>
+              <Icon type="youtube">
+                <a
+                  style={{ color: "black" }}
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <YouTubeIcon />
+                </a>
+              </Icon>
+              <Icon type="twitter">
+                <a
+                  style={{ color: "black" }}
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <TwitterIcon />
+                </a>
+              </Icon>
+              <Icon type="linkedin">
+                <a
+                  style={{ color: "black" }}
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <LinkedInIcon />
+                </a>
+              </Icon>
+            </SocialIcons>
+          </InfoWrapper>
+
+          <Posts>
+            <h1>Posts</h1>
+            {posts?.map((post) => (
+              <Post key={post?._id}>
+                <ImgContainer>
+                  <img src={post?.img} alt="user img" />
+                </ImgContainer>
+                <InfoContainer>
+                  <DateAndCats>
+                    <span>
+                      {`${extractDate(post?.createdAt).month} ${
+                        extractDate(post?.createdAt).day
+                      } , ${extractDate(post?.createdAt).year}`}
+                    </span>
+                    <span>{post?.categories.join("-")}</span>
+                  </DateAndCats>
+                  <Title>{post?.title}</Title>
+                  <Content>{post?.desc}</Content>
+                  <Container>
+                    <WriterInfo>
+                      <Avatar onClick={() => navigate(`profile/${user._id}`)}>
+                        <img src={user?.avatar} />
+                      </Avatar>
+                      <Info>
+                        <div>{user?.username}</div>
+                        <div>{user?.job}</div>
+                      </Info>
+                    </WriterInfo>
+                    {currentUser._id === idParam && (
+                      <Buttons>
+                        <button onClick={() => handleNavigate(post)}>
+                          view
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            navigate(`/makePost`, { state: post });
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            axios
+                              .delete(`posts/${post._id}`, {
+                                headers: {
+                                  token: `Bearer ${currentUser.accessToken}`,
+                                },
+                              })
+                              .then((res) =>
+                                console.log(res, "post deleted successfully")
+                              )
+                              .catch((err) => alert("try again"));
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </Buttons>
+                    )}
+                  </Container>
+                </InfoContainer>
+              </Post>
+            ))}
+          </Posts>
+        </>
+      )}
     </Wrapper>
   );
 };

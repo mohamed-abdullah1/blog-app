@@ -54,7 +54,7 @@ const Trending = () => {
     }
   };
   const handleNavigate = (post) => {
-    navigate(`/post/${post.id}`, { state: post });
+    navigate(`/post/${post?._id}`, { state: post });
   };
   return (
     <div>
@@ -75,7 +75,7 @@ const Trending = () => {
                 </ImgContainer>
                 <InfoContainer>
                   <DateAndCats>
-                    <span>{post.catagories.join(" - ")}</span>
+                    <span>{post?.catagories?.join(" - ")}</span>
                     <span> {post?.date}</span>
                   </DateAndCats>
                   <Title>{post?.title}</Title>
