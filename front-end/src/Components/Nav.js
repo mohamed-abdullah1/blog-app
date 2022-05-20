@@ -11,6 +11,7 @@ import {
   CrossIcon,
   NavMenuContainerUser,
   PersonIconContainer,
+  NavMenuAdmin,
 } from "./styles/Nav.styled";
 import { FaFacebookF, FaTimes } from "react-icons/fa";
 import { AiOutlineHome, AiOutlineTwitter } from "react-icons/ai";
@@ -28,21 +29,27 @@ import { logout } from "../Redux/userSlice";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import MessageIcon from "@mui/icons-material/Message";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import PeopleIcon from "@mui/icons-material/People";
+import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
 const Nav = () => {
   //states and variables
   const [viewSlider, setViewSlider] = useState(false);
   const [viewUserInfoSlider, setUserInfoSlider] = useState(false);
+  const [viewAdminSlider, setViewAdminSlider] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   //functions
   const handleSlider = () => setViewSlider((prevView) => !prevView);
   const handleUserSlider = () => setUserInfoSlider((prev) => !prev);
+  const handleAdminSlider = () => setViewAdminSlider((prev) => !prev);
   const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
-    //pinned posts
   };
+
   return (
     <>
       <NavContainer>
@@ -62,9 +69,17 @@ const Nav = () => {
               <AiOutlineTwitter />
             </div>
           </SocialIcons>
-          <PersonIconContainer onClick={handleUserSlider}>
-            <PersonIcon sx={{ transform: "scale(1.3)" }} />
-          </PersonIconContainer>
+
+          {currentUser.credential >= 1 && (
+            <PersonIconContainer onClick={handleAdminSlider}>
+              <AdminPanelSettingsIcon sx={{ transform: "scale(1.3)" }} />
+            </PersonIconContainer>
+          )}
+          {currentUser.credential >= 1 && (
+            <PersonIconContainer onClick={handleUserSlider}>
+              <PersonIcon sx={{ transform: "scale(1.3)" }} />
+            </PersonIconContainer>
+          )}
           <Navbars onClick={handleSlider}>
             <div>
               <CgMathMinus />
@@ -143,6 +158,32 @@ const Nav = () => {
               </ul>
             )}
           </NavMenuContainerUser>
+          <NavMenuAdmin viewAdminSlider={viewAdminSlider}>
+            <CrossIcon onClick={handleAdminSlider}>
+              <FaTimes />
+            </CrossIcon>
+            <ul>
+              <li onClick={() => navigate("/dashboard")}>
+                <NavMenuIcon>
+                  <DashboardIcon />
+                </NavMenuIcon>
+                <NavMenuTitle>Dashboard</NavMenuTitle>
+              </li>
+              <li onClick={() => navigate("/users")}>
+                <NavMenuIcon>
+                  <PeopleIcon />
+                </NavMenuIcon>
+                <NavMenuTitle>Users</NavMenuTitle>
+              </li>
+
+              <li onClick={() => navigate("/users")}>
+                <NavMenuIcon>
+                  <ArticleRoundedIcon />
+                </NavMenuIcon>
+                <NavMenuTitle>Posts</NavMenuTitle>
+              </li>
+            </ul>
+          </NavMenuAdmin>
         </NavbarContainer>
       </NavContainer>
     </>

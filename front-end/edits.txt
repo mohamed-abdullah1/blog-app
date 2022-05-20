@@ -75,6 +75,15 @@ For Admin
 
 
 
+Admin(influencer) functionality:
+o View topics posted
+o Statics of websites:
+ Number of users that signed up
+ Number of posts
+ The post with the most interaction
+ Number of reaches(+B) //
+o Post, Modify, Delete a posted topic //
+o The admin can remove customers //
 
 
 //ask api team

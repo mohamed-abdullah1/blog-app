@@ -15,6 +15,8 @@ import Pay from "./Pages/Pay";
 import RequestAuth from "./Helper/RequestAuth";
 import { PinnedPosts } from "./Pages/PinnedPosts";
 import Contact from "./Pages/Contact";
+import RequestAuthAdmin from "./Helper/RequestAuthAdmin";
+import Admin from "./Pages/Admin";
 function App() {
   const theme = {
     colors: {
@@ -48,6 +50,9 @@ function App() {
                 <Route path="makePost" element={<MakePost />} />
                 <Route path="pinnedPosts/:userId" element={<PinnedPosts />} />
                 <Route path="contact" element={<Contact />} />
+              </Route>
+              <Route element={<RequestAuthAdmin />}>
+                <Route path="admin" element={<Admin />} />
               </Route>
               <Route path="/" element={<Home />} />
               <Route path="post/:postId" element={<Post />} />
