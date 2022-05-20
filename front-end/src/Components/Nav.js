@@ -26,6 +26,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { logout } from "../Redux/userSlice";
 import PostAddIcon from "@mui/icons-material/PostAdd";
+import PushPinIcon from "@mui/icons-material/PushPin";
 const Nav = () => {
   //states and variables
   const [viewSlider, setViewSlider] = useState(false);
@@ -104,6 +105,12 @@ const Nav = () => {
                     <PostAddIcon />
                   </NavMenuIcon>
                   <NavMenuTitle>Make Post</NavMenuTitle>
+                </li>
+                <li onClick={() => navigate(`pinnedPosts/${currentUser._id}`)}>
+                  <NavMenuIcon>
+                    <PushPinIcon />
+                  </NavMenuIcon>
+                  <NavMenuTitle>Pinned Posts</NavMenuTitle>
                 </li>
                 <li onClick={handleLogout}>
                   <NavMenuIcon>
