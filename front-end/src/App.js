@@ -17,7 +17,10 @@ import { PinnedPosts } from "./Pages/PinnedPosts";
 import Contact from "./Pages/Contact";
 import RequestAuthAdmin from "./Helper/RequestAuthAdmin";
 import Admin from "./Pages/Admin";
+import axios from "./Api/axios";
+import { useEffect, useState } from "react";
 function App() {
+  const [categoriesOptions, setCategoriesOptions] = useState();
   const theme = {
     colors: {
       secondary: "#f79918",
@@ -27,6 +30,15 @@ function App() {
     },
     fonts: "'Poppins', sans-serif",
   };
+  useEffect(() => {
+    axios
+      .get("category/")
+      .then((res) => {
+        setCategoriesOptions(res.data.map((item) => item.name));
+        console.log(categoriesOptions);
+      })
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <Router>
       <div
@@ -45,9 +57,15 @@ function App() {
             <Global />
             <Routes>
               <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
+              <Route
+                path="register"
+                element={<Register categoriesOptions={categoriesOptions} />}
+              />
               <Route element={<RequestAuth />}>
-                <Route path="makePost" element={<MakePost />} />
+                <Route
+                  path="makePost"
+                  element={<MakePost categoriesOptions={categoriesOptions} />}
+                />
                 <Route path="pinnedPosts/:userId" element={<PinnedPosts />} />
                 <Route path="contact" element={<Contact />} />
               </Route>

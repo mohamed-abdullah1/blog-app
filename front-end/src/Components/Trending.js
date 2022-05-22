@@ -16,50 +16,89 @@ import {
   WriterInfo,
 } from "./styles/Trending.styled";
 import { useNavigate } from "react-router-dom";
-
-//identify the route of posts
-const POSTS_URL = "/posts";
-
-const Trending = () => {
-  const [posts, setPosts] = useState();
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const Trending = ({ posts: fetchedPosts }) => {
+  const [posts, setPosts] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   const [sliderNo, setSliderNo] = useState(0);
   const navigate = useNavigate();
   //fetching the post
+  const getPostAndUser = async (post) => {
+    try {
+      const userResponse = await axios.get(`users/find/${post.writer_id}`);
+      console.log("post from trending", { ...post, user: userResponse.data });
+      setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
+      return;
+    } catch (err) {
+      alert(`can't get the user`);
+      return;
+    }
+  };
   useEffect(() => {
-    axios
-      .get(POSTS_URL)
-      .then((res) => {
-        setPosts(res.data);
-        setLoading(false);
-      })
-      .catch((err) => setError(err))
-      .finally(() => {
-        console.log(error);
-      });
-  }, []);
+    setLoading(false);
+    fetchedPosts.map(async (post) => {
+      try {
+        const userResponse = await axios.get(`users/find/${post.writer_id}`);
+        console.log("post from trending", { ...post, user: userResponse.data });
+        setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
+        return;
+      } catch (err) {
+        alert(`can't get the user`);
+        return;
+      }
+    });
+  }, [fetchedPosts]);
+
   const handleSliding = (type) => {
-    if (type === "next" && sliderNo < posts.length - 1) {
+    if (type === "next" && sliderNo < posts?.length - 1) {
       setSliderNo((prev) => prev + 1);
     }
-    if (type === "next" && sliderNo === posts.length - 1) {
+    if (type === "next" && sliderNo === posts?.length - 1) {
       setSliderNo(0);
     }
     if (type === "prev" && sliderNo > 0) {
       setSliderNo((prev) => prev - 1);
     }
     if (type === "prev" && sliderNo === 0) {
-      setSliderNo(posts.length - 1);
+      setSliderNo(posts?.length - 1);
     }
   };
   const handleNavigate = (post) => {
     navigate(`/post/${post?._id}`, { state: post });
   };
+  const extractDate = (date) => {
+    let year = date.slice(0, 4);
+    let month_ = date.slice(5, 7);
+    let month = MONTHS.filter((item, index) => index + 1 === Number(month_))[0];
+    let day = date.slice(8, 10);
+    return { month, day, year };
+  };
   return (
     <div>
-      {loading ? (
-        <MoonLoader loading={loading} size={30} color="black" />
+      {posts.length < 3 ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <MoonLoader loading={true} size={30} color="black" />
+        </div>
       ) : (
         <Wrapper>
           <h1>Trending</h1>
@@ -67,24 +106,33 @@ const Trending = () => {
             {posts?.map((post) => (
               <Post
                 sliderNo={sliderNo}
-                key={post.id}
+                key={`${post._id}+trending`}
                 onClick={() => handleNavigate(post)}
               >
                 <ImgContainer>
-                  <img src={post?.imgUrl} />
+                  <img src={post?.img} />
                 </ImgContainer>
                 <InfoContainer>
                   <DateAndCats>
-                    <span>{post?.catagories?.join(" - ")}</span>
-                    <span> {post?.date}</span>
+                    <span>{post?.categories?.join(" - ")}</span>
+                    <span>
+                      {" "}
+                      {`${extractDate(post?.createdAt).month} ${
+                        extractDate(post?.createdAt).day
+                      } , ${extractDate(post?.createdAt).year}`}
+                    </span>
                   </DateAndCats>
                   <Title>{post?.title}</Title>
-                  <Content>{post?.content}</Content>
+                  <Content>
+                    <div dangerouslySetInnerHTML={{ __html: post?.desc }} />
+                  </Content>
                   <WriterInfo>
-                    <Avatar></Avatar>
+                    <Avatar>
+                      <img src={post.user?.avatar} alt="author pic" />
+                    </Avatar>
                     <Info>
-                      <div>{post?.username}</div>
-                      <div>{post?.userJob}</div>
+                      <div>{post?.user?.username}</div>
+                      <div>{post?.user?.job}</div>
                     </Info>
                   </WriterInfo>
                 </InfoContainer>

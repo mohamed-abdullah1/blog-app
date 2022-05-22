@@ -70,16 +70,16 @@ const Nav = () => {
             </div>
           </SocialIcons>
 
-          {currentUser.credential >= 1 && (
+          {currentUser?.credential === 2 && (
             <PersonIconContainer onClick={handleAdminSlider}>
               <AdminPanelSettingsIcon sx={{ transform: "scale(1.3)" }} />
             </PersonIconContainer>
           )}
-          {currentUser.credential >= 1 && (
-            <PersonIconContainer onClick={handleUserSlider}>
-              <PersonIcon sx={{ transform: "scale(1.3)" }} />
-            </PersonIconContainer>
-          )}
+
+          <PersonIconContainer onClick={handleUserSlider}>
+            <PersonIcon sx={{ transform: "scale(1.3)" }} />
+          </PersonIconContainer>
+
           <Navbars onClick={handleSlider}>
             <div>
               <CgMathMinus />
@@ -110,7 +110,7 @@ const Nav = () => {
             </CrossIcon>
             {currentUser ? (
               <ul>
-                <li onClick={() => navigate(`/profile/${currentUser._id}`)}>
+                <li onClick={() => navigate(`/profile/${currentUser?._id}`)}>
                   <NavMenuIcon>
                     <AccountCircleIcon />
                   </NavMenuIcon>
@@ -122,7 +122,9 @@ const Nav = () => {
                   </NavMenuIcon>
                   <NavMenuTitle>Make Post</NavMenuTitle>
                 </li>
-                <li onClick={() => navigate(`/pinnedPosts/${currentUser._id}`)}>
+                <li
+                  onClick={() => navigate(`/pinnedPosts/${currentUser?._id}`)}
+                >
                   <NavMenuIcon>
                     <PushPinIcon />
                   </NavMenuIcon>

@@ -11,9 +11,7 @@ import axios from "../Api/axios";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const categoriesOptions = ["business", "sports", "politics", "art", "tech"];
-
-const MakePost = () => {
+const MakePost = ({ categoriesOptions: cats }) => {
   const [categories, setCategories] = useState();
   const [title, setTitle] = useState();
   const [desc, setDesc] = useState();
@@ -22,6 +20,7 @@ const MakePost = () => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const [categoriesOptions, setCategoriesOptions] = useState(cats);
   const [loading, setLoading] = useState(false);
   const { state } = useLocation();
   //functions
@@ -89,6 +88,7 @@ const MakePost = () => {
       });
   };
   useEffect(() => {
+    console.log("make cats", categoriesOptions);
     if (state) {
       setTitle(state?.title);
       setDesc(state?.desc);
@@ -103,6 +103,7 @@ const MakePost = () => {
       setCategories(state?.categories);
     }
   }, []);
+
   return (
     <Container>
       <div>

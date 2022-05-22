@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 const RequestAuth = () => {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
-  if (currentUser && currentUser.credential === 1) {
+  if (currentUser && currentUser.credential >= 1) {
     return <Outlet />;
   } else {
     navigate("/login");

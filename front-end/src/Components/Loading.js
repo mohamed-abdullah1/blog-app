@@ -4,8 +4,8 @@ const Loading = ({ size, alignItemsCenter }) => {
   return (
     <div
       style={{
-        width: "100vw",
-        height: "100vh",
+        width: "1500px",
+        height: "800px",
         display: "flex",
         justifyContent: "center",
         alignItems: alignItemsCenter ? "center" : "",

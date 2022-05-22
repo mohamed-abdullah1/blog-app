@@ -91,7 +91,7 @@ export const NavMenuContainer = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   top: 0;
   right: ${(props) => (props.viewSlider ? "-0vw" : "-100vw")};
-  z-index: 1;
+  z-index: 1000;
   background-color: white;
   padding: 10px;
   & > ul {

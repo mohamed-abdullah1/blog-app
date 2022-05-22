@@ -16,16 +16,7 @@ import Select from "@mui/material/Select";
 import { Autocomplete, FormControl, InputLabel } from "@mui/material";
 import axios from "../Api/axios";
 
-const interestsOptions = [
-  "business",
-  "sports",
-  "tech",
-  "education",
-  "life",
-  "politics",
-];
-
-const Register = () => {
+const Register = ({ categoriesOptions: interestsOptions }) => {
   const navigate = useNavigate();
   const [postResMsg, setErrorOfResponse] = useState(null);
   const [credential, setCredential] = useState(0);
@@ -194,16 +185,7 @@ const Register = () => {
             />
             <p style={{ color: "red" }}>{errors.youtube_account?.message}</p>
           </div>
-          <div>
-            <TextField
-              label="confirmPassword"
-              type="password"
-              {...register("confirmPassword")}
-              error={errors.confirmPassword ? true : false}
-              sx={{ width: "100%" }}
-            />
-            <p style={{ color: "red" }}>{errors.confirmPassword?.message}</p>
-          </div>
+
           <div>
             <Autocomplete
               multiple

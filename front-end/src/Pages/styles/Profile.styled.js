@@ -4,7 +4,7 @@ export const Wrapper = styled.div`
 `;
 //info styles
 export const InfoWrapper = styled.div`
-  height: 50vh;
+  min-height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -54,10 +54,12 @@ export const Icon = styled.div`
 `;
 //posts and post
 export const Posts = styled.div`
+  min-height: 400px;
+  min-width: 500px;
   display: flex;
   padding: 0 80px;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: space-around;
 `;
 
@@ -67,7 +69,7 @@ export const Post = styled.div`
   align-items: center;
   max-height: 190px;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   height: 200px;
   cursor: pointer;
 `;

@@ -19,6 +19,7 @@ const Pay = () => {
   const makePayment = (token) => {
     console.log("token", token);
     const asyncReq = async (token) => {
+      setLoading(true);
       try {
         const res = await axios.post("checkout/payment/", {
           amount: 70,
@@ -26,7 +27,6 @@ const Pay = () => {
         });
         console.log("response", res);
         if (res.status === 200) {
-          setLoading(true);
           axios
             .post("auth/register/", { ...location.state })
             .then((res) => {
@@ -111,7 +111,7 @@ const Pay = () => {
               name="Buy React"
               amount={product.price * 100}
             >
-              <Btn disabled={loading && "true"}>continue subscription</Btn>
+              <Btn disabled={loading}>continue subscription</Btn>
             </StripeCheckout>
           </Info>
         </Card>

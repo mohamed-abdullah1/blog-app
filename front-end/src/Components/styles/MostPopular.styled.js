@@ -4,6 +4,7 @@ export const Wrapper = styled.div`
   /* border: solid red 1px; */
   padding: 10px 90px;
   margin-top: 20px;
+  max-height: 1200px;
   & > h1 {
     text-align: center;
     margin-top: 30px;
@@ -24,6 +25,7 @@ export const Post = styled.div`
   /* overflow: hidden; */
   display: flex;
   flex-direction: column;
+  min-width: 300px;
 `;
 export const ImgContainer = styled.div`
   height: 60%;
@@ -72,6 +74,12 @@ export const Avatar = styled.div`
   background-color: ${(props) => props.theme.colors.whiteGray};
   border-radius: 50%;
   margin-right: 10px;
+  & > img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 export const Info = styled.div`
   & > div:nth-child(1) {

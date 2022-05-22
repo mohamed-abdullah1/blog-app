@@ -16,49 +16,60 @@ import {
 import MoonLoader from "react-spinners/MoonLoader";
 
 //identify the route of posts
-const POSTS_URL = "/posts";
 
-const MostPopular = () => {
-  const [posts, setPosts] = useState();
+const MostPopular = ({ posts: fetchedPosts }) => {
+  const [posts, setPosts] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   //fetching the post
   useEffect(() => {
-    axios
-      .get(POSTS_URL)
-      .then((res) => {
-        setPosts(res.data);
-        setLoading(false);
-      })
-      .catch((err) => setError(err))
-      .finally(() => {
-        console.log(error);
-      });
-  }, []);
+    setLoading(false);
+    fetchedPosts.map(async (post) => {
+      try {
+        const userResponse = await axios.get(`users/find/${post.writer_id}`);
+        console.log("post from trending", { ...post, user: userResponse.data });
+        setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
+        return;
+      } catch (err) {
+        alert(`can't get the user`);
+        return;
+      }
+    });
+  }, [fetchedPosts]);
   return (
     <Wrapper>
       <h1>Most Popular Posts</h1>
-      {loading ? (
-        <MoonLoader loading={loading} size={30} color="black" />
+      {posts?.length < 3 ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <MoonLoader loading={true} size={30} color="black" />
+        </div>
       ) : (
         <Posts>
-          {posts?.map((post) => (
-            <Post key={post.id}>
+          {posts?.slice(0, 6).map((post) => (
+            <Post key={`${post._id}+mostPopular`}>
               <ImgContainer>
-                <img src={post?.imgUrl} />
+                <img src={post?.img} />
               </ImgContainer>
               <InfoContainer>
                 <DateAndCats>
-                  <span>{post.catagories.join(" - ")}</span>
+                  <span>{post?.catagories?.join(" - ")}</span>
                   <span> {post?.date}</span>
                 </DateAndCats>
                 <Title>{post?.title}</Title>
-                <Content>{post?.content.slice(0, 100)}</Content>
+                <Content>{post?.desc.slice(0, 100)}</Content>
                 <WriterInfo>
-                  <Avatar></Avatar>
+                  <Avatar>
+                    <img src={post?.user?.avatar} />
+                  </Avatar>
                   <Info>
-                    <div>{post?.username}</div>
-                    <div>{post?.userJob}</div>
+                    <div>{post?.user.username}</div>
+                    <div>{post?.user.job}</div>
                   </Info>
                 </WriterInfo>
               </InfoContainer>

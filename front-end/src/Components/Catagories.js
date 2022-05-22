@@ -15,97 +15,140 @@ import {
   WriterInfo,
 } from "./styles/Catagories.styled";
 import MoonLoader from "react-spinners/MoonLoader";
-
-const POSTS_URL = "/posts";
-
-const Catagories = () => {
-  const [businessPosts, setBusinessPosts] = useState();
-  const [sportsPosts, setSportsPosts] = useState();
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const Catagories = ({ posts: fetchedPosts }) => {
+  const [posts, setPosts] = useState([]);
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   //fetching the post
   useEffect(() => {
-    axios
-      .get(POSTS_URL)
-      .then((res) => {
-        setBusinessPosts(
-          res.data
-            .filter((item) => item.catagories.includes("Business"))
-            .slice(0, 3)
-        );
-        setSportsPosts(
-          res.data
-            .filter((item) => item.catagories.includes("sports"))
-            .slice(0, 3)
-        );
-        console.log(businessPosts, sportsPosts);
-        setLoading(false);
-      })
-      .catch((err) => setError(err))
-      .finally(() => {
-        console.log(error);
-      });
-  }, []);
+    setLoading(false);
+    fetchedPosts.map(async (post) => {
+      try {
+        const userResponse = await axios.get(`users/find/${post.writer_id}`);
+        console.log("post from trending", { ...post, user: userResponse.data });
+        setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
+        return;
+      } catch (err) {
+        alert(`can't get the user`);
+        return;
+      }
+    });
+  }, [fetchedPosts]);
+  const extractDate = (date) => {
+    let year = date.slice(0, 4);
+    let month_ = date.slice(5, 7);
+    let month = MONTHS.filter((item, index) => index + 1 === Number(month_))[0];
+    let day = date.slice(8, 10);
+    return { month, day, year };
+  };
   return (
     <Wrapper>
       <LeftCat>
         <h2>Sports</h2>
         <Posts>
-          {loading ? (
-            <MoonLoader size={30} color="black" />
+          {posts?.filter((item) => item.categories?.includes("sports")) < 3 ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MoonLoader loading={true} size={30} color="black" />
+            </div>
           ) : (
-            sportsPosts?.map((post) => (
-              <Post key={post.id}>
-                <ImgContainer>
-                  <img src={post?.imgUrl} />
-                </ImgContainer>
-                <InfoContainer>
-                  <DateAndCats>
-                    <span>{post.catagories.join(" - ")}</span>
-                    <span> {post?.date}</span>
-                  </DateAndCats>
-                  <Title>{post?.title}</Title>
-                  <WriterInfo>
-                    <Avatar></Avatar>
-                    <Info>
-                      <div>{post?.username}</div>
-                      <div>{post?.userJob}</div>
-                    </Info>
-                  </WriterInfo>
-                </InfoContainer>
-              </Post>
-            ))
+            posts
+              ?.filter((item) => item.categories?.includes("sports"))
+              .slice(0, 3)
+              .map((post) => (
+                <Post key={post.id + "cats"}>
+                  <ImgContainer>
+                    <img src={post?.img} />
+                  </ImgContainer>
+                  <InfoContainer>
+                    <DateAndCats>
+                      <span>
+                        {" "}
+                        {`${extractDate(post?.createdAt).month} ${
+                          extractDate(post?.createdAt).day
+                        } , ${extractDate(post?.createdAt).year}`}
+                      </span>
+                    </DateAndCats>
+                    <Title>{post?.title}</Title>
+                    <WriterInfo>
+                      <Avatar>
+                        <img src={post?.user?.avatar} />
+                      </Avatar>
+                      <Info>
+                        <div>{post?.user.username}</div>
+                        <div>{post?.user.job}</div>
+                      </Info>
+                    </WriterInfo>
+                  </InfoContainer>
+                </Post>
+              ))
           )}
         </Posts>
       </LeftCat>
       <RightCat>
         <h2>Business</h2>
         <Posts>
-          {loading ? (
-            <MoonLoader size={30} color="black" />
+          {posts?.filter((item) => item.categories?.includes("sports")) < 3 ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <MoonLoader loading={true} size={30} color="black" />
+            </div>
           ) : (
-            businessPosts?.map((post) => (
-              <Post key={post.id}>
-                <ImgContainer>
-                  <img src={post?.imgUrl} />
-                </ImgContainer>
-                <InfoContainer>
-                  <DateAndCats>
-                    <span>{post.catagories.join(" - ")}</span>
-                    <span> {post?.date}</span>
-                  </DateAndCats>
-                  <Title>{post?.title}</Title>
-                  <WriterInfo>
-                    <Avatar></Avatar>
-                    <Info>
-                      <div>{post?.username}</div>
-                      <div>{post?.userJob}</div>
-                    </Info>
-                  </WriterInfo>
-                </InfoContainer>
-              </Post>
-            ))
+            posts
+              ?.filter((item) => item?.categories?.includes("business"))
+              .slice(0, 3)
+              ?.map((post) => (
+                <Post key={post.id}>
+                  <ImgContainer>
+                    <img src={post?.img} />
+                  </ImgContainer>
+                  <InfoContainer>
+                    <DateAndCats>
+                      <span>
+                        {" "}
+                        {`${extractDate(post?.createdAt).month} ${
+                          extractDate(post?.createdAt).day
+                        } , ${extractDate(post?.createdAt).year}`}
+                      </span>
+                    </DateAndCats>
+                    <Title>{post?.title}</Title>
+                    <WriterInfo>
+                      <Avatar>
+                        <img src={post?.user.avatar} />
+                      </Avatar>
+                      <Info>
+                        <div>{post?.user.username}</div>
+                        <div>{post?.user.job}</div>
+                      </Info>
+                    </WriterInfo>
+                  </InfoContainer>
+                </Post>
+              ))
           )}
         </Posts>
       </RightCat>
