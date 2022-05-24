@@ -80,17 +80,6 @@ const Nav = () => {
             <PersonIcon sx={{ transform: "scale(1.3)" }} />
           </PersonIconContainer>
 
-          <Navbars onClick={handleSlider}>
-            <div>
-              <CgMathMinus />
-            </div>
-            <div>
-              <CgMathMinus />
-            </div>
-            <div>
-              <CgMathMinus />
-            </div>
-          </Navbars>
           <NavMenuContainer viewSlider={viewSlider}>
             <CrossIcon onClick={handleSlider}>
               <FaTimes />

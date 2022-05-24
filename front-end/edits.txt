@@ -55,7 +55,7 @@ For Users
     //6- enable  the premier or admin to delete his posts 
     //7- enable edit also
 
-    9- add functionality to the home page like:- ==50min
+    //9- add functionality to the home page like:- ==50min
         -edit catagories
         -trending
         -most popular

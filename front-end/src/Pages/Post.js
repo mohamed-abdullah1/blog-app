@@ -40,214 +40,228 @@ import {
 } from "react-icons/fa";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import axios from "../Api/axios";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import PushPinIcon from "@mui/icons-material/PushPin";
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 const Post = () => {
-  const { state: post } = useLocation();
-  console.log(post);
+  const [commentState, setComment] = useState();
+  const { state: postInfo } = useLocation();
+  const { currentUser } = useSelector((state) => state.user);
+  const [post, setPost] = useState(postInfo);
+  const [loading, setLoading] = useState(false);
+  const [x, setX] = useState(1);
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
+    const data = {
+      comment: commentState,
+      username: currentUser?.username,
+      avatar: currentUser?.avatar,
+      user_id: currentUser?._id,
+    };
+    axios
+      .post(`posts/${post._id}/comments`, data, {
+        headers: { token: `Bearer ${currentUser?.accessToken}` },
+      })
+      .then((res) => {
+        // console.log(res);
+        setX((prev) => prev + 1);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
   };
+  const extractDate = (date) => {
+    let year = date?.slice(0, 4);
+    let month_ = date?.slice(5, 7);
+    let month = MONTHS.filter((item, index) => index + 1 === Number(month_))[0];
+    let day = date?.slice(8, 10);
+    return { month, day, year };
+  };
+  const handleLikeAndDislike = (type) => {
+    setLoading(true);
+    if (type === "like") {
+      axios
+        .post(
+          `posts/${post._id}/likes`,
+          { user_id: currentUser._id, like: true },
+          { headers: { token: `Bearer ${currentUser?.accessToken}` } }
+        )
+        .then((res) => {
+          console.log(res);
+          setX((prev) => (prev += 1));
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    } else if (type === "dislike") {
+      axios
+        .post(
+          `posts/${post._id}/likes`,
+          { user_id: currentUser._id, like: false },
+          { headers: { token: `Bearer ${currentUser?.accessToken}` } }
+        )
+        .then((res) => {
+          console.log(res);
+          setX((prev) => (prev += 1));
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+  useEffect(() => {
+    // console.log(postInfo);
+    // console.log(x);
+    axios
+      .get(`posts/find/${postInfo._id}`)
+      .then((res) =>
+        setPost((prev) => {
+          console.log("res", res);
+          console.log("prev", prev);
+          const {
+            comments,
+            numberOfLikes,
+            likes,
+            numberOfDisLikes,
+            ...newPost
+          } = prev;
+          console.log("new", { comments: res.data.comments, ...newPost });
+          return {
+            numberOfLikes: res.data.numberOfLikes,
+            likes: res.data.likes,
+            numberOfDisLikes: res.data.numberOfDisLikes,
+            comments: res.data.comments,
+            ...newPost,
+          };
+        })
+      )
+      .catch((err) => console.log(err));
+  }, [x]);
+  console.log(post);
   return (
-    <Wrapper>
-      <AuthorInfo>
-        <Avatar></Avatar>
-        <Info>
-          <div>Author Name</div>
-          <div>Date</div>
-        </Info>
-      </AuthorInfo>
-      <Title>
-        Your most unhappy customers are your greatest source of learning.
-      </Title>
-      <Content>
-        Far far away, behind the word mountains, far from the countries Vokalia
-        and Consonantia, there live the blind texts.
-      </Content>
-      <ImgContainer>
-        <img src="https://preview.colorlib.com/theme/magdesign/images/ximg_2.jpg.pagespeed.ic.fbbBEgB1Q6.webp" />
-      </ImgContainer>
-      <PostBody>
-        <div>
-          Far far away, behind the word mountains, far from the countries
-          Vokalia and Consonantia, there live the blind texts. Separated they
-          live in Bookmarksgrove right at the coast of the Semantics, a large
-          language ocean. A small river named Duden flows by their place and
-          supplies it with the necessary regelialia. It is a paradisematic
-          country, in which roasted parts of sentences fly into your mouth. The
-          Big Oxmox advised her not to do so, because there were thousands of
-          bad Commas, wild Question Marks and devious Semikoli, but the Little
-          Blind Text didn’t listen. She packed her seven versalia, put her
-          initial into the belt and made herself on the way. Even the
-          all-powerful Pointing has no control about the blind texts it is an
-          almost unorthographic life One day however a small line of blind text
-          by the name of Lorem Ipsum decided to leave for the far World of
-          Grammar. When she reached the first hills of the Italic Mountains, she
-          had a last view back on the skyline of her hometown Bookmarksgrove,
-          the headline of Alphabet Village and the subline of her own road, the
-          Line Lane. Pityful a rethoric question ran over her cheek, then she
-          continued her way.
-        </div>
-        <ImgGrid>
-          <div>
-            <img src="https://preview.colorlib.com/theme/magdesign/images/post_lg_1.jpg.webp" />
-          </div>
-          <div>
-            <img src="https://preview.colorlib.com/theme/magdesign/images/post_lg_1.jpg.webp" />
-          </div>
-          <div>
-            <img src="https://preview.colorlib.com/theme/magdesign/images/post_lg_1.jpg.webp" />
-          </div>
-          <div>
-            <img src="https://preview.colorlib.com/theme/magdesign/images/post_lg_1.jpg.webp" />
-          </div>
-          <div>
-            <img src="https://preview.colorlib.com/theme/magdesign/images/post_lg_1.jpg.webp" />
-          </div>
-          <div>
-            <img src="https://preview.colorlib.com/theme/magdesign/images/post_lg_1.jpg.webp" />
-          </div>
-        </ImgGrid>
-        <div>
-          Far far away, behind the word mountains, far from the countries
-          Vokalia and Consonantia, there live the blind texts. Separated they
-          live in Bookmarksgrove right at the coast of the Semantics, a large
-          language ocean. A small river named Duden flows by their place and
-          supplies it with the necessary regelialia. It is a paradisematic
-          country, in which roasted parts of sentences fly into your mouth.
-        </div>
-      </PostBody>
-      <ShareSocialIcons>
-        <h1>Share</h1>
-        <div>
-          <SocialIcons>
-            <Icon>
-              <FaFacebookF />
-            </Icon>
-            <Icon>
-              <FaInstagram />
-            </Icon>
-            <Icon>
-              <FaLinkedinIn />
-            </Icon>
-            <Icon>
-              <FaTwitter />
-            </Icon>
-          </SocialIcons>
-          <LikesAndDislikes>
+    <>
+      {post && (
+        <Wrapper>
+          <AuthorInfo>
+            <Avatar>
+              <img src={post?.user?.avatar} />
+            </Avatar>
+            <Info>
+              <div>{post?.user?.username}</div>
+              <div>
+                {" "}
+                {`${extractDate(post?.createdAt).month} ${
+                  extractDate(post?.createdAt).day
+                } , ${extractDate(post?.createdAt).year}`}
+              </div>
+            </Info>
+          </AuthorInfo>
+          <Title>{post?.title}</Title>
+          <Content>{post?.desc}</Content>
+          <ImgContainer>
+            <img src={post?.img} />
+          </ImgContainer>
+          <PostBody>
+            <div dangerouslySetInnerHTML={{ __html: post?.content }} />
+          </PostBody>
+          <ShareSocialIcons>
+            <h1>Pin </h1>
             <div>
-              <span>10</span>
-              <div>
-                <ThumbUpAltIcon />
-              </div>
-            </div>
-            <div>
-              <span>10</span>
-              <div>
-                <ThumbDownIcon />
-              </div>
-            </div>
-          </LikesAndDislikes>
-        </div>
-      </ShareSocialIcons>
-      <CommentSection>
-        <h1>Comments</h1>
-        <Comment>
-          <CommentAvatar></CommentAvatar>
-          <CommentContent>
-            <Username>John Deep</Username>
-            <Date>5 days ago</Date>
-            <CommentText>
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus
-              scelerisque ante sollicitudin. Cras purus odio, vestibulum in
-              vulputate at, tempus viverra turpis. Fusce condimentum nunc ac
-              nisi vulputate fringilla. Donec lacinia congue felis in faucibus
-              ras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-            </CommentText>
-            {/* <LikesAndDislikes>
-              <div>
-                <span>10</span>
-                <div>
-                  <GrLike />
-                </div>
-              </div>
-              <div>
-                <span>10</span>
-                <div>
-                  <GrDislike />
-                </div>
-              </div>
-            </LikesAndDislikes> */}
-          </CommentContent>
-        </Comment>
-        <Comment>
-          <CommentAvatar></CommentAvatar>
-          <CommentContent>
-            <Username>John Deep</Username>
-            <Date>5 days ago</Date>
-            <CommentText>
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus
-              scelerisque ante sollicitudin. Cras purus odio, vestibulum in
-              vulputate at, tempus viverra turpis. Fusce condimentum nunc ac
-              nisi vulputate fringilla. Donec lacinia congue felis in faucibus
-              ras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-            </CommentText>
-            {/* <LikesAndDislikes>
-              <div>
-                <span>10</span>
-                <div>
-                  <GrLike />
-                </div>
-              </div>
-              <div>
-                <span>10</span>
-                <div>
-                  <GrDislike />
-                </div>
-              </div>
-            </LikesAndDislikes> */}
-          </CommentContent>
-        </Comment>
-        <Comment>
-          <CommentAvatar></CommentAvatar>
-          <CommentContent>
-            <Username>John Deep</Username>
-            <Date>5 days ago</Date>
-            <CommentText>
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus
-              scelerisque ante sollicitudin. Cras purus odio, vestibulum in
-              vulputate at, tempus viverra turpis. Fusce condimentum nunc ac
-              nisi vulputate fringilla. Donec lacinia congue felis in faucibus
-              ras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-            </CommentText>
-          </CommentContent>
-        </Comment>
-        <Comment>
-          <CommentAvatar></CommentAvatar>
-          <CommentContent>
-            <Username>John Deep</Username>
-            <Date>5 days ago</Date>
-            <CommentText>
-              Cras sit amet nibh libero, in gravida nulla. Nulla vel metus
-              scelerisque ante sollicitudin. Cras purus odio, vestibulum in
-              vulputate at, tempus viverra turpis. Fusce condimentum nunc ac
-              nisi vulputate fringilla. Donec lacinia congue felis in faucibus
-              ras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-            </CommentText>
-          </CommentContent>
-        </Comment>
+              <SocialIcons>
+                <Icon
+                  disabled={loading}
+                  onClick={() => {
+                    setLoading(true);
+                    axios
+                      .put(
+                        `pinned/find/${currentUser._id}/`,
 
-        <CommentForm onSubmit={handleSubmit}>
-          <h3>Leave a Comment</h3>
-          <textarea
-            label="Enter Your Comment"
-            name="commentText"
-            required
-            // value=""
-            onChange={(e) => {}}
-          />
-          <button type="submit">Add Comment</button>
-        </CommentForm>
-      </CommentSection>
-      <RelatedPosts>
+                        { postId: post._id },
+                        {
+                          headers: {
+                            token: `Bearer ${currentUser.accessToken}`,
+                          },
+                        }
+                      )
+                      .then((res) => {
+                        console.log("pinned", res);
+                      })
+                      .catch((err) => {
+                        console.log(err);
+                        alert("it is already in your pinned list");
+                      })
+                      .finally(() => setLoading(false));
+                  }}
+                >
+                  <PushPinIcon />
+                </Icon>
+              </SocialIcons>
+              <LikesAndDislikes>
+                <button
+                  disabled={loading}
+                  onClick={() => handleLikeAndDislike("like")}
+                >
+                  <span>{post?.numberOfLikes}</span>
+                  <div>
+                    <ThumbUpAltIcon />
+                  </div>
+                </button>
+                <button
+                  disabled={loading}
+                  onClick={() => handleLikeAndDislike("dislike")}
+                >
+                  <span>{post?.numberOfDisLikes}</span>
+                  <div>
+                    <ThumbDownIcon />
+                  </div>
+                </button>
+              </LikesAndDislikes>
+            </div>
+          </ShareSocialIcons>
+          <CommentSection>
+            <h1>Comments</h1>
+            {post?.comments?.map((comment) => (
+              <Comment>
+                <CommentAvatar>
+                  <img src={comment.avatar} />
+                </CommentAvatar>
+                <CommentContent>
+                  <Username>{comment.username}</Username>
+                  <Date>{comment.data}</Date>
+                  <CommentText>{comment.comment}</CommentText>
+                </CommentContent>
+              </Comment>
+            ))}
+            <CommentForm onSubmit={handleSubmit}>
+              <h3>Leave a Comment</h3>
+              <textarea
+                label="Enter Your Comment"
+                name="commentText"
+                required
+                value={commentState}
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+              />
+              <button type="submit" disabled={loading}>
+                Add Comment
+              </button>
+            </CommentForm>
+          </CommentSection>
+          {/* <RelatedPosts>
         <h1>Related</h1>
         <RelatedPost>
           <RelatedImgContainer>
@@ -255,7 +269,7 @@ const Post = () => {
           </RelatedImgContainer>
           <RelatedInfoContainer>
             <DateAndCats>
-              <span>{post?.catagories.join(" - ")}</span>
+              <span>{post?.catagories?.join(" - ")}</span>
               <span> {post?.date}</span>
             </DateAndCats>
             <RelatedTitle>{post?.title}</RelatedTitle>
@@ -309,9 +323,17 @@ const Post = () => {
             </WriterInfo>
           </RelatedInfoContainer>
         </RelatedPost>
-      </RelatedPosts>
-    </Wrapper>
+      </RelatedPosts> */}
+        </Wrapper>
+      )}
+    </>
   );
 };
 
 export default Post;
+
+//edit likes and dislikes in post page
+//edit the pinned post in post page
+//edit navigation from any post card to the post page
+//contact page
+//message,subject , username,email

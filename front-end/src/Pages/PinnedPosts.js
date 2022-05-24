@@ -41,6 +41,7 @@ export const PinnedPosts = () => {
 
   const [loading, setLoading] = useState();
   const [numOfPinned, setNumOfPinned] = useState(0);
+  const [x, setX] = useState(1);
   const navigate = useNavigate();
   //functions
   const extractDate = (date) => {
@@ -87,7 +88,19 @@ export const PinnedPosts = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [x]);
+  const handleDelete = (post) => {
+    console.log(post._id);
+    // const data = { postId: post._id };
+    // console.log(data);
+    axios
+      .delete(`pinned/find/${currentUser._id}`, { data: { postId: post._id } })
+      .then((res) => {
+        console.log("rssss", res);
+        setX((prev) => (prev += 1));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <>
       <Posts>
@@ -131,6 +144,27 @@ export const PinnedPosts = () => {
                       <div>{post.user?.job}</div>
                     </Info>
                   </WriterInfo>
+                  <form onClick={() => handleDelete(post)}>
+                    <button
+                      style={{
+                        width: "60px",
+                        height: "30px",
+                        borderRadius: "20px",
+                        backgroundColor: "#f79918",
+                        color: "white",
+                        fontWeight: "700",
+                        cursor: "pointer",
+                        boxShadow: "0 0 10px rgba(0, 0, 0, 0.2)",
+                        transition: "0.1s all ease-in-out",
+
+                        "&:hover": {
+                          backgroundColor: "red",
+                        },
+                      }}
+                    >
+                      delete
+                    </button>
+                  </form>
                 </Container>
               </InfoContainer>
             </Post>
@@ -140,8 +174,3 @@ export const PinnedPosts = () => {
     </>
   );
 };
-//todo:
-//everything is good
-//i fetched the user of every post
-// i fetched all posts whose id was in the pinned list successfully
-//solve the error and the sequence of fetching isn't good
