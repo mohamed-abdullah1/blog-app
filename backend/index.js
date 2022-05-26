@@ -9,6 +9,7 @@ const categoryRoute = require("./routes/category");
 const pinnedRoute = require("./routes/pinned");
 const stripeRoute = require("./routes/stripe");
 const newsRouter = require("./routes/news");
+const contactRouter = require("./routes/contact");
 
 const cors = require("cors");
 
@@ -16,7 +17,7 @@ dotenv.config();
 
 mongoose
   .connect(process.env.MONGO_URL)
-  .then( console.log("DB Connection Successfull!"))
+  .then(console.log("DB Connection Successfull!"))
   .catch((err) => {
     console.log(err);
   });
@@ -30,7 +31,7 @@ app.use("/api/category", categoryRoute);
 app.use("/api/pinned", pinnedRoute);
 app.use("/api/checkout", stripeRoute);
 app.use("/api/news", newsRouter);
-
+app.use("/api/contact", contactRouter);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Backend server is running! On ${process.env.PORT}`);
