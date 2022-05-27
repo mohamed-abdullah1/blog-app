@@ -19,6 +19,8 @@ import RequestAuthAdmin from "./Helper/RequestAuthAdmin";
 import Admin from "./Pages/Admin";
 import axios from "./Api/axios";
 import { useEffect, useState } from "react";
+import PostsAdmin from "./Pages/PostsAdmin";
+import UsersAdmin from "./Pages/UsersAdmin";
 function App() {
   const [categoriesOptions, setCategoriesOptions] = useState();
   const theme = {
@@ -71,6 +73,8 @@ function App() {
               </Route>
               <Route element={<RequestAuthAdmin />}>
                 <Route path="admin" element={<Admin />} />
+                <Route path="allPosts" element={<PostsAdmin />} />
+                <Route path="allUsers" element={<UsersAdmin />} />
               </Route>
               <Route path="/" element={<Home />} />
               <Route path="post/:postId" element={<Post />} />

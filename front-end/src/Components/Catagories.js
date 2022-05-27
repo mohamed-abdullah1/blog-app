@@ -15,6 +15,8 @@ import {
   WriterInfo,
 } from "./styles/Catagories.styled";
 import MoonLoader from "react-spinners/MoonLoader";
+import { useNavigate } from "react-router-dom";
+
 const MONTHS = [
   "January",
   "February",
@@ -29,11 +31,14 @@ const MONTHS = [
   "November",
   "December",
 ];
+
 const Catagories = ({ posts: fetchedPosts }) => {
   const [posts, setPosts] = useState([]);
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   //fetching the post
   useEffect(() => {
     setLoading(false);
@@ -49,6 +54,9 @@ const Catagories = ({ posts: fetchedPosts }) => {
       }
     });
   }, [fetchedPosts]);
+  const handleNavigate = (post) => {
+    navigate(`/post/${post?._id}`, { state: post });
+  };
   const extractDate = (date) => {
     let year = date.slice(0, 4);
     let month_ = date.slice(5, 7);
@@ -76,7 +84,11 @@ const Catagories = ({ posts: fetchedPosts }) => {
               ?.filter((item) => item.categories?.includes("sports"))
               .slice(0, 3)
               .map((post) => (
-                <Post key={post.id + "cats"}>
+                <Post
+                  key={post.id + "cats"}
+                  onClick={() => handleNavigate(post)}
+                  style={{ cursor: "pointer" }}
+                >
                   <ImgContainer>
                     <img src={post?.img} />
                   </ImgContainer>
@@ -123,7 +135,11 @@ const Catagories = ({ posts: fetchedPosts }) => {
               ?.filter((item) => item?.categories?.includes("business"))
               .slice(0, 3)
               ?.map((post) => (
-                <Post key={post.id}>
+                <Post
+                  key={post.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleNavigate(post)}
+                >
                   <ImgContainer>
                     <img src={post?.img} />
                   </ImgContainer>

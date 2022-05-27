@@ -15,11 +15,13 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
   const validationSchema = yup.object().shape({
     username: yup.string().required("username is required"),
     password: yup.string().required("password is required"),
@@ -32,6 +34,7 @@ const Login = () => {
 
   const onSubmit = (data) => {
     console.log("data", data);
+    setLoading(true);
     dispatch(loginStart());
     axios
       .post("auth/login", data)
@@ -44,7 +47,8 @@ const Login = () => {
       .catch((err) => {
         dispatch(loginFailure("Unauthorized"));
         alert(`${error.msg} , Try again`);
-      });
+      })
+      .finally(() => setLoading(false));
     console.log(data);
   };
   return (
@@ -75,7 +79,7 @@ const Login = () => {
               "&:hover": { bgcolor: "#d68317" },
               padding: "10px 25px",
             }}
-            disabled={isFetching && "true"}
+            disabled={loading}
           >
             Login
           </Button>

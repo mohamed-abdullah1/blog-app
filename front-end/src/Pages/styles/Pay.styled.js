@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  height: 80vh;
+  height: 700px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,5 +41,9 @@ export const Btn = styled.div`
   margin-top: -40px;
   &:hover {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
   }
 `;

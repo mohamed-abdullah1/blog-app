@@ -36,24 +36,13 @@ const Trending = ({ posts: fetchedPosts }) => {
   const [loading, setLoading] = useState(true);
   const [sliderNo, setSliderNo] = useState(0);
   const navigate = useNavigate();
-  //fetching the post
-  const getPostAndUser = async (post) => {
-    try {
-      const userResponse = await axios.get(`users/find/${post.writer_id}`);
-      console.log("post from trending", { ...post, user: userResponse.data });
-      setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
-      return;
-    } catch (err) {
-      alert(`can't get the user`);
-      return;
-    }
-  };
+
   useEffect(() => {
     setLoading(false);
     fetchedPosts.map(async (post) => {
       try {
         const userResponse = await axios.get(`users/find/${post.writer_id}`);
-        console.log("post from trending", { ...post, user: userResponse.data });
+        // console.log("post from trending", { ...post, user: userResponse.data });
         setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
         return;
       } catch (err) {
@@ -122,9 +111,13 @@ const Trending = ({ posts: fetchedPosts }) => {
                       } , ${extractDate(post?.createdAt).year}`}
                     </span>
                   </DateAndCats>
-                  <Title>{post?.title}</Title>
+                  <Title>{post?.title.slice(0, 80)}</Title>
                   <Content>
-                    <div dangerouslySetInnerHTML={{ __html: post?.desc }} />
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: post?.desc.slice(0, 200),
+                      }}
+                    />
                   </Content>
                   <WriterInfo>
                     <Avatar>

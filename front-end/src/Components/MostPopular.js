@@ -14,6 +14,7 @@ import {
   Posts,
 } from "./styles/MostPopular.styled";
 import MoonLoader from "react-spinners/MoonLoader";
+import { useNavigate } from "react-router-dom";
 
 //identify the route of posts
 
@@ -21,6 +22,8 @@ const MostPopular = ({ posts: fetchedPosts }) => {
   const [posts, setPosts] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   //fetching the post
   useEffect(() => {
     setLoading(false);
@@ -36,6 +39,9 @@ const MostPopular = ({ posts: fetchedPosts }) => {
       }
     });
   }, [fetchedPosts]);
+  const handleNavigate = (post) => {
+    navigate(`/post/${post?._id}`, { state: post });
+  };
   return (
     <Wrapper>
       <h1>Most Popular Posts</h1>
@@ -52,7 +58,11 @@ const MostPopular = ({ posts: fetchedPosts }) => {
       ) : (
         <Posts>
           {posts?.slice(0, 6).map((post) => (
-            <Post key={`${post._id}+mostPopular`}>
+            <Post
+              key={`${post._id}+mostPopular`}
+              onClick={() => handleNavigate(post)}
+              style={{ cursor: "pointer" }}
+            >
               <ImgContainer>
                 <img src={post?.img} />
               </ImgContainer>

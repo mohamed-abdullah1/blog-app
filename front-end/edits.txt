@@ -88,3 +88,24 @@ o The admin can remove customers //
 
 //ask api team
 //to make api to handle contact
+
+
+//trending//most comment
+//most popular // difference between likes - dislikes
+//search
+//contact
+    //body 
+        post request api/contact/us
+            email
+            name
+            subject //title of message
+            message 
+        post req api/contact/admin
+            email -->email of the user
+            name ---> admin_name
+            subject 
+            message
+
+//likeOrDislike
+// userId , postId 
+// return like , dislike , none 

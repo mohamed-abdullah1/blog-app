@@ -65,6 +65,7 @@ const Post = () => {
   const [post, setPost] = useState(postInfo);
   const [loading, setLoading] = useState(false);
   const [x, setX] = useState(1);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -125,6 +126,9 @@ const Post = () => {
   useEffect(() => {
     // console.log(postInfo);
     // console.log(x);
+    // window.scrollTo(0, 0);
+
+    console.log("hello");
     axios
       .get(`posts/find/${postInfo._id}`)
       .then((res) =>
@@ -150,6 +154,7 @@ const Post = () => {
       )
       .catch((err) => console.log(err));
   }, [x]);
+
   console.log(post);
   return (
     <>
@@ -189,7 +194,7 @@ const Post = () => {
                       .put(
                         `pinned/find/${currentUser._id}/`,
 
-                        { postId: post._id },
+                        { userIdAndPostId: `${currentUser._id}|${post._id}` },
                         {
                           headers: {
                             token: `Bearer ${currentUser.accessToken}`,
@@ -332,8 +337,6 @@ const Post = () => {
 
 export default Post;
 
-//edit likes and dislikes in post page
-//edit the pinned post in post page
 //edit navigation from any post card to the post page
 //contact page
 //message,subject , username,email

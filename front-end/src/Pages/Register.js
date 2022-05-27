@@ -21,6 +21,7 @@ const Register = ({ categoriesOptions: interestsOptions }) => {
   const [postResMsg, setErrorOfResponse] = useState(null);
   const [credential, setCredential] = useState(0);
   const [interests, setInterests] = useState(["business"]);
+  const [loading, setLoading] = useState(false);
   const validationSchema = yup.object().shape({
     username: yup
       .string()
@@ -66,16 +67,17 @@ const Register = ({ categoriesOptions: interestsOptions }) => {
       navigate("/pay", { state: { interests, credential, ...formData } });
     }
     if (credential === 0) {
+      setLoading(true);
       axios
         .post("auth/register", { interests, credential, ...formData })
         .then((res) => {
-          console.log(res);
           navigate("/login");
         })
         .catch((err) => {
           console.log(err);
           alert("please try again");
-        });
+        })
+        .finally(() => setLoading(false));
     }
   };
 
@@ -225,39 +227,12 @@ const Register = ({ categoriesOptions: interestsOptions }) => {
               </Select>
             </FormControl>
           </div>
-          {/* <div>
-            <FormControlLabel
-              control={
-                <Controller
-                  control={control}
-                  name="acceptTerms"
-                  defaultValue="false"
-                  inputRef={register()}
-                  render={({ field: { onChange } }) => (
-                    <Checkbox
-                      sx={{
-                        color: "#140005",
-                        "&.Mui-checked": {
-                          color: "#140005",
-                        },
-                      }}
-                      onChange={(e) => onChange(e.target.checked)}
-                    />
-                  )}
-                />
-              }
-              label={
-                <Typography color={errors.acceptTerms ? "error" : "inherit"}>
-                  I have read and agree to the Terms *
-                </Typography>
-              }
-            />
-          </div> */}
 
           <Button
             variant="contained"
             type="submit"
             sx={{ bgcolor: "#f79918", "&:hover": { bgcolor: "#d68317" } }}
+            disabled={loading}
           >
             Sign Up
           </Button>

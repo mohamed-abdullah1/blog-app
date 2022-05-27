@@ -13,7 +13,7 @@ import {
   WriterInfo,
 } from "./styles/Profile.styled";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../Api/axios";
 import { useSelector } from "react-redux";
 import Loading from "../Components/Loading";
@@ -52,30 +52,39 @@ export const PinnedPosts = () => {
     return { month, day, year };
   };
   const getPostAndUser = async (post) => {
+    console.log("post", post);
+    console.log("postId", post.userIdAndPostId.split("|"));
     try {
-      const postResponse = await axios.get(`posts/find/${post.postId}`);
+      const postResponse = await axios.get(
+        `posts/find/${post.userIdAndPostId.split("|")[1]}`
+      );
       const userResponse = await axios.get(
         `users/find/${postResponse.data.writer_id}`
       );
-      console.log({ ...postResponse.data, user: userResponse.data });
-      console.log(numOfPinned);
+      console.log("post number ", {
+        ...postResponse.data,
+        user: userResponse.data,
+      });
+      console.log("num of pinned", numOfPinned);
       setPosts((prev) => [
         ...prev,
         { ...postResponse.data, user: userResponse.data },
       ]);
     } catch (err) {
-      alert(`can't get the user`);
+      // alert(`can't get the user`);
+      console.log(err);
       return;
     }
   };
-  useState(() => {
+
+  useEffect(() => {
     setLoading(true);
     axios
       .get(`pinned/find/${currentUser._id}`, {
         headers: { token: `Bearer ${currentUser.accessToken}` },
       })
       .then(async (res) => {
-        console.log("xxxxxxxres", res);
+        console.log("res", res);
         setNumOfPinned(res.data.posts.length);
         const posts_ = await res.data.posts?.map((post) =>
           getPostAndUser(post)
@@ -88,7 +97,8 @@ export const PinnedPosts = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [x]);
+  }, []);
+
   const handleDelete = (post) => {
     console.log(post._id);
     // const data = { postId: post._id };
@@ -105,7 +115,7 @@ export const PinnedPosts = () => {
     <>
       <Posts>
         <h1>Posts</h1>
-        {posts.length !== numOfPinned ? (
+        {loading ? (
           <div
             style={{
               display: "flex",

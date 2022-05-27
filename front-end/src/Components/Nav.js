@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   NavContainer,
   Logo,
@@ -33,6 +33,8 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import ArticleRoundedIcon from "@mui/icons-material/ArticleRounded";
+import axios from "../Api/axios";
+
 const Nav = () => {
   //states and variables
   const [viewSlider, setViewSlider] = useState(false);
@@ -40,6 +42,8 @@ const Nav = () => {
   const [viewAdminSlider, setViewAdminSlider] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [posts, setPosts] = useState([]);
+
   //functions
   const handleSlider = () => setViewSlider((prevView) => !prevView);
   const handleUserSlider = () => setUserInfoSlider((prev) => !prev);
@@ -49,11 +53,16 @@ const Nav = () => {
     dispatch(logout());
     navigate("/");
   };
-
+  useEffect(() => {
+    axios
+      .get("posts/")
+      .then((res) => setPosts(res.data))
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <>
       <NavContainer>
-        <Search />
+        <Search posts={posts} />
         <Logo>
           <h1 onClick={() => navigate("/")}>BLOG</h1>
         </Logo>
@@ -99,7 +108,11 @@ const Nav = () => {
             </CrossIcon>
             {currentUser ? (
               <ul>
-                <li onClick={() => navigate(`/profile/${currentUser?._id}`)}>
+                <li
+                  onClick={() =>
+                    navigate(`/profile/${currentUser?._id}`, { state: posts })
+                  }
+                >
                   <NavMenuIcon>
                     <AccountCircleIcon />
                   </NavMenuIcon>

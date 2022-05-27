@@ -62,7 +62,15 @@ const Profile = () => {
     return { month, day, year };
   };
   const handleNavigate = (post) => {
-    navigate(`/post/${post._id}`, { state: post });
+    navigate(`/post/${post._id}`, {
+      state: {
+        user: {
+          avatar: currentUser?.avatar,
+          username: currentUser?.username,
+        },
+        ...post,
+      },
+    });
   };
   useEffect(() => {
     setLoading(true);
