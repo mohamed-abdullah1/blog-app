@@ -138,4 +138,21 @@ router.post("/:postId/likes", verifyToken, async (req, res) => {
     return res.status(404).json(err);
   }
 });
+
+//check if a user made like or dislike
+router.get("/:postId/status", verifyToken, async (req, res) => {
+  const post = await Post.findById(req.params.postId);
+  try {
+    for (let i = 0; i < post.likes.length; i++) {
+      if (post.likes[i].user_id === req.user._id) {
+        if (post.likes[i].like) return res.status(201).json({ status: "like" });
+        else return res.status(201).json({ status: "dislike" });
+      }
+    }
+    return res.status(201).json({ status: "none" });
+  } catch (err) {
+    return res.status(404).json(err);
+  }
+});
+
 module.exports = router;
