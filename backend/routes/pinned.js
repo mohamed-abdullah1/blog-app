@@ -82,5 +82,25 @@ router.get("/",verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
+
+router.get("/:postId/status", verifyToken, async (req, res) => {
+  const pinned = await Pinned.findOne({userId: req.user._id});
+  try {
+    let flag=0;
+    for (let i = 0; i < pinned.posts.length; i++) {
+      if (pinned.posts[i].postId === req.params.postId) {
+           flag=1;
+           return res.status(201).json({ status: "true" });
+      }
+      }
+
+      if(flag===0)
+          return res.status(201).json({ status: "false" });
+  } catch (err) {
+    return res.status(404).json(err);
+  }
+});
+
+
 module.exports = router;
 
