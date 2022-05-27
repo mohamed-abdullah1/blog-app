@@ -23,14 +23,23 @@ router.post("/", verifyTokenAndPremium, async (req, res) => {
 //UPDATE
 router.put("/:postId", verifyTokenAndPremium, async (req, res) => {
   try {
-    console.log(req.user);
-    const updatedPost = await Post.findOneAndUpdate(
-      { _id: req.params.postId, writer_id: req.user._id },
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
+    if (req.user.credential == 2) {
+      const updatedPost = await Post.findOneAndUpdate(
+        { _id: req.params.postId },
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+    } else {
+      const updatedPost = await Post.findOneAndUpdate(
+        { _id: req.params.postId, writer_id: req.user._id },
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+    }
     res.status(200).json(updatedPost);
   } catch (err) {
     res.status(500).json(err);
@@ -40,10 +49,16 @@ router.put("/:postId", verifyTokenAndPremium, async (req, res) => {
 //DELETE
 router.delete("/:postId", verifyTokenAndPremium, async (req, res) => {
   try {
-    await Post.findOneAndDelete({
-      _id: req.params.postId,
-      writer_id: req.user._id,
-    });
+    if (req.user.credential == 2) {
+      await Post.findOneAndDelete({
+        _id: req.params.postId,
+      });
+    } else {
+      await Post.findOneAndDelete({
+        _id: req.params.postId,
+        writer_id: req.user._id,
+      });
+    }
     res.status(200).json("Post has been deleted...");
   } catch (err) {
     res.status(500).json(err);
@@ -154,5 +169,4 @@ router.get("/:postId/status", verifyToken, async (req, res) => {
     return res.status(404).json(err);
   }
 });
-
 module.exports = router;
