@@ -24,21 +24,31 @@ router.post("/",verifyToken, async (req, res) => {
 
 // UPDATE, user can change its own pinned list
 // put new version
-router.put("/find/:id",verifyTokenAndAuthorization, async (req, res) => {
-  try {
-    console.log("in try of update fav", req.body);
-    const updatedPinned = await Pinned.findOneAndUpdate(
-      { userId: req.params.id },
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
+router.put("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
+  const pinned = await Pinned.findOne({userId:req.params.id});
 
-    return res.status(200).json(updatedPinned);
+  try {
+    let flag=0;
+    for (let i = 0; i < pinned.posts.length; i++) {
+     
+        if (pinned.posts[i].postId === req.body.postId) {
+          //remove it
+          flag=1;
+           pinned.posts.splice(i, 1);
+
+        }
+      }
+      if(flag===0){
+        pinned.posts.push({postId:req.body.postId});
+      }
+
+        const updatedPinned = await pinned.save();
+        return res.status(201).json(updatedPinned);
+      
   } catch (err) {
-    return res.status(500).json(err);
-  }
+    return res.status(404).json(err);
+  }   
+  
 });
 
 //DELETE the pinned list 
