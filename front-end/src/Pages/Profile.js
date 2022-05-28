@@ -173,7 +173,9 @@ const Profile = () => {
                     <Content>{post?.desc.slice(0, 100)}</Content>
                     <Container>
                       <WriterInfo>
-                        <Avatar onClick={() => navigate(`profile/${user._id}`)}>
+                        <Avatar
+                          onClick={() => navigate(`profile/${user?._id}`)}
+                        >
                           <img src={user?.avatar} />
                         </Avatar>
                         <Info>
@@ -181,8 +183,8 @@ const Profile = () => {
                           <div>{user?.job}</div>
                         </Info>
                       </WriterInfo>
-                      {currentUser._id === idParam ||
-                      currentUser.credential === 2 ? (
+                      {currentUser?._id === idParam ||
+                      currentUser?.credential === 2 ? (
                         <Buttons>
                           <button
                             onClick={(e) => {
@@ -201,7 +203,7 @@ const Profile = () => {
                               axios
                                 .delete(`posts/${post._id}`, {
                                   headers: {
-                                    token: `Bearer ${currentUser.accessToken}`,
+                                    token: `Bearer ${currentUser?.accessToken}`,
                                   },
                                 })
                                 .then((res) =>
