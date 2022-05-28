@@ -13,57 +13,81 @@ import {
   WriterInfo,
   Posts,
 } from "./styles/MostPopular.styled";
-import PuffLoader from "react-spinners/PuffLoader";
+import MoonLoader from "react-spinners/MoonLoader";
+import { useNavigate } from "react-router-dom";
 
 //identify the route of posts
-const POSTS_URL = "/posts";
 
-const MostPopular = () => {
-  const [posts, setPosts] = useState();
+const MostPopular = ({ posts: fetchedPosts }) => {
+  const [posts, setPosts] = useState([]);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
   //fetching the post
   useEffect(() => {
-    axios
-      .get(POSTS_URL)
-      .then((res) => {
-        setPosts(res.data);
-      })
-      .catch((err) => setError(err))
-      .finally(() => {
-        setLoading(false);
-        console.log(error);
-      });
-  }, []);
+    setLoading(false);
+    fetchedPosts.map(async (post) => {
+      try {
+        const userResponse = await axios.get(`users/find/${post.writer_id}`);
+        console.log("post from trending", { ...post, user: userResponse.data });
+        setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
+        return;
+      } catch (err) {
+        alert(`can't get the user`);
+        return;
+      }
+    });
+  }, [fetchedPosts]);
+  const handleNavigate = (post) => {
+    navigate(`/post/${post?._id}`, { state: post });
+  };
   return (
     <Wrapper>
       <h1>Most Popular Posts</h1>
-      {loading ? (
-        <PuffLoader size={30} color="black" />
+      {posts?.length < 3 ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <MoonLoader loading={true} size={30} color="black" />
+        </div>
       ) : (
         <Posts>
-          {posts?.map((post) => (
-            <Post key={post.id}>
-              <ImgContainer>
-                <img src={post?.imgUrl} />
-              </ImgContainer>
-              <InfoContainer>
-                <DateAndCats>
-                  <span>{post.catagories.join(" - ")}</span>
-                  <span> {post?.date}</span>
-                </DateAndCats>
-                <Title>{post?.title}</Title>
-                <Content>{post?.content.slice(0, 100)}</Content>
-                <WriterInfo>
-                  <Avatar></Avatar>
-                  <Info>
-                    <div>{post?.username}</div>
-                    <div>{post?.userJob}</div>
-                  </Info>
-                </WriterInfo>
-              </InfoContainer>
-            </Post>
-          ))}
+          {posts
+            ?.sort((a, b) => b.numberOfLikes - a.numberOfLikes)
+            .slice(0, 6)
+            .map((post) => (
+              <Post
+                key={`${post._id}+mostPopular`}
+                onClick={() => handleNavigate(post)}
+                style={{ cursor: "pointer" }}
+              >
+                <ImgContainer>
+                  <img src={post?.img} />
+                </ImgContainer>
+                <InfoContainer>
+                  <DateAndCats>
+                    <span>{post?.catagories?.join(" - ")}</span>
+                    <span> {post?.date}</span>
+                  </DateAndCats>
+                  <Title>{post?.title}</Title>
+                  <Content>{post?.desc.slice(0, 100)}</Content>
+                  <WriterInfo>
+                    <Avatar>
+                      <img src={post?.user?.avatar} />
+                    </Avatar>
+                    <Info>
+                      <div>{post?.user.username}</div>
+                      <div>{post?.user.job}</div>
+                    </Info>
+                  </WriterInfo>
+                </InfoContainer>
+              </Post>
+            ))}
         </Posts>
       )}
     </Wrapper>

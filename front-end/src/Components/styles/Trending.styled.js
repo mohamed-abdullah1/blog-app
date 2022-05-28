@@ -14,13 +14,14 @@ export const Posts = styled.div`
   justify-content: space-between;
   max-width: 100%;
   overflow: hidden;
+  height: 300px;
 `;
 export const Post = styled.div`
   /* border: solid red 1px; */
-  min-width: 85vw;
+  min-width: 1400px;
   transition: all 0.5s ease-in-out;
   transform: ${({ sliderNo }) =>
-    `translateX( ${Number(sliderNo) * -85}vw)`}; //85
+    `translateX( ${Number(sliderNo) * -1400}px)`}; //85
   display: flex;
   cursor: pointer;
 `;
@@ -77,6 +78,12 @@ export const Avatar = styled.div`
   width: 35px;
   background-color: ${(props) => props.theme.colors.whiteGray};
   border-radius: 50%;
+  & > img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 export const Info = styled.div`
   & > div:nth-child(1) {

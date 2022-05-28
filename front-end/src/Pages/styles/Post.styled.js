@@ -1,6 +1,6 @@
 import styled from "styled-components";
 export const Wrapper = styled.div`
-  height: 450vh;
+  /* height: ; */
   padding: 0 260px;
   margin-top: 50px;
 `;
@@ -12,20 +12,27 @@ export const AuthorInfo = styled.div`
   margin-left: -50px;
 `;
 export const Avatar = styled.div`
-  height: 60px;
-  width: 60px;
+  height: 100px;
+  width: 100px;
   background-color: ${(props) => props.theme.colors.whiteGray};
   border-radius: 50%;
+  & > img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 export const Info = styled.div`
   text-align: center;
+  margin-top: 10px;
   color: ${(props) => props.theme.colors.darkGray};
   & > div:nth-child(1) {
     font-size: 18px;
   }
   & > div:nth-child(2) {
     font-size: 16px;
-    margin-top: -8px;
+    margin-top: 0px;
   }
 `;
 export const Title = styled.div`
@@ -46,8 +53,11 @@ export const ImgContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+  max-width: 1000px;
   & > img {
     border-radius: 20px;
+    object-fit: cover;
+    width: 100%;
   }
 `;
 export const PostBody = styled.div`
@@ -84,7 +94,7 @@ export const ImgGrid = styled.div`
 `;
 export const ShareSocialIcons = styled.div`
   & > h1 {
-    font-size: 16px;
+    font-size: 20px;
     color: ${(props) => props.theme.colors.darkGray};
   }
   & > div {
@@ -95,15 +105,18 @@ export const ShareSocialIcons = styled.div`
   }
 `;
 export const SocialIcons = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 20%;
-  margin-left: -20px;
-  /* margin-top: 10px; */
+  width: 30%;
+  margin-left: 40px;
 `;
-export const Icon = styled.div`
-  font-size: 18px;
+export const Icon = styled.button`
+  cursor: pointer;
+  background-color: white;
+  color: ${(props) => props.color};
+  transform: scale(1.3);
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
 `;
 export const RelatedPosts = styled.div`
   margin-top: 100px;
@@ -205,6 +218,12 @@ export const CommentAvatar = styled.div`
   border-radius: 50%;
   flex: 1;
   margin-right: 30px;
+  & > img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 export const CommentContent = styled.div`
   flex: 14;
@@ -228,19 +247,36 @@ export const LikesAndDislikes = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  & > div {
+
+  & > button {
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    background-color: white;
+    &:disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+    & > span {
+      font-size: 20px;
+      margin-right: 5px;
+    }
     & > div {
-      transition: all 0.5s ease-in-out;
+      transition: all 0s ease-in-out;
+      transform: scale(1.2);
       // this is the like and dislike btn
       &:hover {
         color: red;
         transform: scale(1.1);
       }
     }
+  }
+  & > button:first-child {
+    color: ${(props) => props.likeColor};
+  }
+  & > button:last-child {
+    color: ${(props) => props.disLikeColor};
   }
 `;
 export const CommentForm = styled.form`
@@ -253,6 +289,9 @@ export const CommentForm = styled.form`
     min-width: 500px;
     max-height: 200px;
     min-height: 200px;
+    border: 1px solid black;
+    padding: 20px;
+    font-size: 1.3rem;
   }
   & > button {
     margin-top: 10px;
@@ -263,6 +302,10 @@ export const CommentForm = styled.form`
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
     &:hover {
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }

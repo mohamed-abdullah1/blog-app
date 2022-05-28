@@ -56,12 +56,13 @@ export const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  /* border: solid red 1px; */
 `;
 export const SocialIcons = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 30%;
+  width: 25%;
   & > div {
     cursor: pointer;
   }
@@ -90,7 +91,7 @@ export const NavMenuContainer = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   top: 0;
   right: ${(props) => (props.viewSlider ? "-0vw" : "-100vw")};
-  z-index: 1;
+  z-index: 1000;
   background-color: white;
   padding: 10px;
   & > ul {
@@ -123,3 +124,61 @@ export const NavMenuIcon = styled.div`
   justify-content: center;
 `;
 export const NavMenuTitle = styled.div``;
+
+export const NavMenuContainerUser = styled.div`
+  position: absolute;
+  right: -100vw;
+  transition: all 0.5s ease-out;
+  width: 20vw;
+  height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  top: 0;
+  right: ${(props) => (props.viewUserInfo ? "-0vw" : "-100vw")};
+  z-index: 1;
+  background-color: white;
+  padding: 10px;
+  & > ul {
+  }
+  & > ul > li {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    font-weight: 300;
+    margin-bottom: 20px;
+    cursor: pointer;
+    &:hover {
+      color: ${(props) => props.theme.colors.secondary};
+    }
+  }
+`;
+export const PersonIconContainer = styled.div`
+  cursor: pointer;
+`;
+export const NavMenuAdmin = styled.div`
+  position: absolute;
+  right: -100vw;
+  transition: all 0.5s ease-out;
+  width: 15vw;
+  height: 100vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  top: 0;
+  right: ${(props) => (props.viewAdminSlider ? "-0vw" : "-100vw")};
+  z-index: 1;
+  background-color: white;
+  padding: 10px;
+  & > ul {
+  }
+  & > ul > li {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    font-weight: 300;
+    margin-bottom: 20px;
+    cursor: pointer;
+    &:hover {
+      color: ${(props) => props.theme.colors.secondary};
+    }
+  }
+`;

@@ -1,0 +1,118 @@
+6- add functionality to post page
+
+<!-- 2- add login and register -->
+
+3- add number of likes and comments and dislikes under the avatar
+4- enable functionality at the comment section
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# <!-- 5- edit the search -> 1hour -->
+
+Design admin section -> 1hour
+BUILD YOUR REDUX AND DESIGN IT -> 1hour
+FINISH CART in ecommerce project -> 2hour
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+/////////////////
+User
+# -make a profile page for the user =now
+-edit the register
+# ---> user can register in a premier or regular plan
+---> enable him to add a phot for him 
+- add a page for creating new post
+
+    #if there is time
+    -add a chat page to enable chatting between the premier and admin
+
+/////////////////
+Admin
+-View topics posted
+-Statics of websites:
+-Number of users that signed up
+-Number of posts
+-The post with the most interaction
+-Post, Modify, Delete a posted topic
+-The admin can remove customers
+-Send an email to any user
+
+
+
+TO DOs:-
+For Users
+    //1- build redux for the userSlice == 40min
+        -userInfo
+        -posts_id //no need
+        -pinned_posts //no need
+    //2- register functionality ==  40min
+        -> don't send post req until he subscribe using stripe 
+    //3- login functionality == 10min
+    
+    //4- add RequestAuth in the routing for admin and users and unregistered users == 30min
+    //5- build and add the makePost page ==60min  -->the functionality 
+    //8- build edit page-->maybe it will be the same as makePost ==40min
+    //6- enable  the premier or admin to delete his posts 
+    //7- enable edit also
+
+    //9- add functionality to the home page like:- ==50min
+        -edit catagories
+        -trending
+        -most popular
+    10- add functionality in the post page   ==60min
+        -make comment 
+        -make like
+        
+    11- add a pinned page to view all pinned posts ==50min 
+        -add a pinned icon to all posts in post page
+        -view pinned posts in the pinned page
+        -enable delete the pinned page
+For Admin 
+   1-view all posts in blog
+   2-view all premier users
+   3-view all regular users
+   4-statics page view number of ...
+
+
+
+Admin(influencer) functionality:
+o View topics posted
+o Statics of websites:
+     Number of users that signed up
+     Number of posts
+     The post with the most interaction
+     Number of reaches(+B) //
+o Post, Modify, Delete a posted topic //
+o The admin can remove customers //
+
+
+//ask api team
+//to make api to handle contact
+
+
+//trending//most comment
+//most popular // difference between likes - dislikes
+//search
+//contact
+    //body 
+        post request api/contact/us
+            email
+            name
+            subject //title of message
+            message 
+        post req api/contact/admin
+            email -->email of the user
+            name ---> admin_name
+            subject 
+            message
+
+//likeOrDislike
+// userId , postId 
+// return like , dislike , none 
+
+
+//admin 
+remove the contact from navbar
+//add contact in admin
+//enable routing and contact in the table of users
+//enable like 

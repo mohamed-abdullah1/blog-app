@@ -65,10 +65,10 @@ export const DateAndCats = styled.div`
   & > span:not(:last-child) {
     margin-right: 9px;
   }
-  & > span:nth-child(1) {
+  & > span {
     font-weight: 800;
   }
-  & > span:nth-child(2) {
+  & > span {
     color: ${(props) => props.theme.colors.gray};
   }
 `;
@@ -89,6 +89,12 @@ export const Avatar = styled.div`
   width: 35px;
   background-color: ${(props) => props.theme.colors.whiteGray};
   border-radius: 50%;
+  & > img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 export const Info = styled.div`
   & > div:nth-child(1) {

@@ -5,31 +5,34 @@
             "id":1,
             "title":"Your most unhappy customers are your greatest source of learning.",
             "content":"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
-            "username":"Sergy Campbell",
+            "username":"John Wick",
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/ximg_2.jpg.pagespeed.ic.fbbBEgB1Q6.webp",
-            "catagories":["Business","Travel"]
+            "catagories":["Business","Travel"],
+            "writer_id":1
         },
         {
             "id":2,
             "title":"Your most unhappy customers are your greatest source of learning.",
             "content":"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
-            "username":"Sergy Campbell",
+            "username":"Rishalson Shambo",
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/post_lg_2.jpg.webp",
-            "catagories":["Business","Travel","sports"]
+            "catagories":["Business","Travel","sports"],
+            "writer_id":2
         },
         {
             "id":3,
             "title":"Your most unhappy customers are your greatest source of learning.",
             "content":"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
-            "username":"Sergy Campbell",
+            "username":"Sam Noah",
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/post_lg_4.jpg.webp",
-            "catagories":["Business","Travel"]
+            "catagories":["Business","Travel"],
+            "writer_id":3
         },
         {
             "id":4,
@@ -39,48 +42,92 @@
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/ximg_3.jpg.pagespeed.ic.TsSrvxpHvJ.webp",
-            "catagories":["Business","Travel","sports"]
+            "catagories":["Business","Travel","sports"],
+            "writer_id":1
         },
         {
             "id":5,
             "title":"Your most unhappy customers are your greatest source of learning.",
             "content":"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
-            "username":"Sergy Campbell",
+            "username":"John Wick",
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/post_lg_3.jpg.webp",
-            "catagories":["Business","Travel"]
+            "catagories":["Business","Travel"],
+            "writer_id":1
         },
         {
             "id":6,
             "title":"Your most unhappy customers are your greatest source of learning.",
             "content":"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
-            "username":"Sergy Campbell",
+            "username":"Rishalson Shambo",
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/ximg_4.jpg.pagespeed.ic.2DwdgZu3vw.webp",
-            "catagories":["Business","Travel","sports"]
+            "catagories":["Business","Travel","sports"],
+            "writer_id":2
         }
         ,
         {
             "id":7,
             "title":"Your most unhappy customers are your greatest source of learning.",
             "content":"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
-            "username":"Sergy Campbell",
+            "username":"Rishalson Shambo",
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/img_5.jpg.webp",
-            "catagories":["Business","Travel"]
+            "catagories":["Business","Travel"],
+            "writer_id":2
         },
         {
             "id":8,
             "title":"Your most unhappy customers are your greatest source of learning.",
             "content":"Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.",
-            "username":"Sergy Campbell",
+            "username":"Sam Noah",
             "userJob":"CEO and Founder",
             "date":"JULY 2, 2020",
             "imgUrl":"https://preview.colorlib.com/theme/magdesign/images/img_6.jpg.webp",
-            "catagories":["Business","Travel","sports"]
+            "catagories":["Business","Travel","sports"],
+            "writer_id":3
+        }
+
+    ],
+    "users":[
+        {
+            "id":1,
+            "username":"John Wick",
+            "avatar":"https://images.unsplash.com/photo-1493106819501-66d381c466f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+            "job":"Football Player",
+            "interests":["tech","football","reading","movies","politics","software development"]
+            ,
+            "facebook_account":"#",
+            "twitter_account":"#",
+            "linked_account":"#",
+            "youtube_account":"#"
+        },
+        {
+            "id":2,
+            "username":"Rishalson Shambo",
+            "avatar":"https://images.unsplash.com/photo-1509399693673-755307bfc4e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
+            "job":"Football Player",
+            "interests":["tech","football","reading","movies","politics","software development"]
+            ,
+            "facebook_account":"#",
+            "twitter_account":"#",
+            "linked_account":"#",
+            "youtube_account":"#"
+        },
+        {
+            "id":3,
+            "username":"Sam Noah",
+            "avatar":"https://images.unsplash.com/photo-1503443062224-9f77d743cf25?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80",
+            "job":"Football Player",
+            "interests":["tech","football","reading","movies","politics","software development"]
+            ,
+            "facebook_account":"#",
+            "twitter_account":"#",
+            "linked_account":"#",
+            "youtube_account":"#"
         }
 
     ]
