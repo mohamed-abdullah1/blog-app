@@ -98,7 +98,7 @@ const Post = () => {
       axios
         .post(
           `posts/${post._id}/likes`,
-          { user_id: currentUser._id, like: false },
+          { user_id: currentUser?._id, like: false },
           { headers: { token: `Bearer ${currentUser?.accessToken}` } }
         )
         .then((res) => {
@@ -136,13 +136,13 @@ const Post = () => {
       )
       .then(() => {
         return axios.get(`pinned/${post._id}/status`, {
-          headers: { token: `Bearer ${currentUser.accessToken}` },
+          headers: { token: `Bearer ${currentUser?.accessToken}` },
         });
       })
       .then((pinnedStatusRes) => {
         setIsInPinned(pinnedStatusRes.data.status);
         return axios.get(`posts/${post._id}/status`, {
-          headers: { token: `Bearer ${currentUser.accessToken}` },
+          headers: { token: `Bearer ${currentUser?.accessToken}` },
         });
       })
       .then((likeStatusRes) => {
@@ -183,7 +183,7 @@ const Post = () => {
             <div dangerouslySetInnerHTML={{ __html: post?.content }} />
           </PostBody>
           <ShareSocialIcons>
-            {currentUser.credential >= 1 && (
+            {currentUser?.credential >= 1 && (
               <>
                 <h1>Pin </h1>
 
@@ -195,12 +195,12 @@ const Post = () => {
                         setLoading(true);
                         axios
                           .put(
-                            `pinned/find/${currentUser._id}/`,
+                            `pinned/find/${currentUser?._id}/`,
 
                             { postId: `${post._id}` },
                             {
                               headers: {
-                                token: `Bearer ${currentUser.accessToken}`,
+                                token: `Bearer ${currentUser?.accessToken}`,
                               },
                             }
                           )
@@ -264,7 +264,7 @@ const Post = () => {
                 </CommentContent>
               </Comment>
             ))}
-            {currentUser.credential >= 1 && (
+            {currentUser?.credential >= 1 && (
               <>
                 <CommentForm onSubmit={handleSubmit}>
                   <h3>Leave a Comment</h3>

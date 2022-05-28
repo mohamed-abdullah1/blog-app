@@ -66,7 +66,7 @@ const Nav = () => {
       <NavContainer>
         <Search posts={posts} />
         <Logo>
-          <h1 onClick={() => navigate("/")}>لا غالب الا الله</h1>
+          <h1 onClick={() => navigate("/")}>Avengers</h1>
         </Logo>
         <NavbarContainer>
           <SocialIcons>
