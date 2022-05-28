@@ -1,6 +1,6 @@
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "../Api/axios";
 import { useSelector } from "react-redux";
@@ -17,6 +17,7 @@ const Contact = () => {
   const [subject, setSubject] = useState();
   const { currentUser } = useSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
+  const { state } = useLocation();
   //functions
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,29 +30,51 @@ const Contact = () => {
       subject,
       message,
     });
-    axios
-      .post(
-        "contact/us",
-        {
-          email: currentUser?.email,
-          name: currentUser?.username,
+    if (state) {
+      axios
+        .post(`contact/admin`, {
+          email: state.email,
+          name: state.username,
           subject,
           message,
-        },
-        { headers: { token: `Bearer ${currentUser.accessToken}` } }
-      )
-      .then((res) => {
-        console.log(res);
-        alert(`your message sent successfully to the admin`);
-        navigate("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        alert("there is a problem try again");
-      })
-      .finally(() => setLoading(false));
+        })
+        .then((res) => {
+          console.log(res);
+          alert(`your message sent successfully to the ${state.username}`);
+          navigate("/allUsers");
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("there is a problem try again");
+        })
+        .finally(() => setLoading(false));
+    } else {
+      axios
+        .post(
+          "contact/us",
+          {
+            email: currentUser?.email,
+            name: currentUser?.username,
+            subject,
+            message,
+          },
+          { headers: { token: `Bearer ${currentUser.accessToken}` } }
+        )
+        .then((res) => {
+          console.log(res);
+          alert(`your message sent successfully to the admin`);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+          alert("there is a problem try again");
+        })
+        .finally(() => setLoading(false));
+    }
   };
-
+  useState(() => {
+    console.log("state", state);
+  }, []);
   return (
     <form
       onSubmit={handleSubmit}

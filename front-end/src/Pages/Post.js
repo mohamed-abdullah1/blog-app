@@ -1,27 +1,16 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   AuthorInfo,
   Avatar,
   Content,
   Icon,
   ImgContainer,
-  ImgGrid,
   PostBody,
-  RelatedPosts,
-  RelatedPost,
   ShareSocialIcons,
   SocialIcons,
   Wrapper,
   Info,
   Title,
-  RelatedInfoContainer,
-  DateAndCats,
-  RelatedTitle,
-  RelatedContent,
-  WriterInfo,
-  RelatedAvatar,
-  RelatedInfo,
-  RelatedImgContainer,
   CommentSection,
   Comment,
   CommentContent,
@@ -32,12 +21,7 @@ import {
   CommentAvatar,
   CommentForm,
 } from "./styles/Post.styled";
-import {
-  FaFacebookF,
-  FaTwitter,
-  FaLinkedinIn,
-  FaInstagram,
-} from "react-icons/fa";
+
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import axios from "../Api/axios";
@@ -65,7 +49,9 @@ const Post = () => {
   const [post, setPost] = useState(postInfo);
   const [loading, setLoading] = useState(false);
   const [x, setX] = useState(1);
-
+  const navigate = useNavigate();
+  const [isInPinned, setIsInPinned] = useState();
+  const [likeStatus, setLikeStatus] = useState();
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -124,10 +110,6 @@ const Post = () => {
     }
   };
   useEffect(() => {
-    // console.log(postInfo);
-    // console.log(x);
-    // window.scrollTo(0, 0);
-
     console.log("hello");
     axios
       .get(`posts/find/${postInfo._id}`)
@@ -152,6 +134,21 @@ const Post = () => {
           };
         })
       )
+      .then(() => {
+        return axios.get(`pinned/${post._id}/status`, {
+          headers: { token: `Bearer ${currentUser.accessToken}` },
+        });
+      })
+      .then((pinnedStatusRes) => {
+        setIsInPinned(pinnedStatusRes.data.status);
+        return axios.get(`posts/${post._id}/status`, {
+          headers: { token: `Bearer ${currentUser.accessToken}` },
+        });
+      })
+      .then((likeStatusRes) => {
+        console.log("like status", likeStatusRes.data.status);
+        setLikeStatus(likeStatusRes.data.status);
+      })
       .catch((err) => console.log(err));
   }, [x]);
 
@@ -161,8 +158,11 @@ const Post = () => {
       {post && (
         <Wrapper>
           <AuthorInfo>
-            <Avatar>
-              <img src={post?.user?.avatar} />
+            <Avatar
+              style={{ cursor: "pointer" }}
+              onClick={() => navigate(`/profile/${post?.user?._id}`)}
+            >
+              <img src={post?.user?.avatar} alt="avatar" />
             </Avatar>
             <Info>
               <div>{post?.user?.username}</div>
@@ -177,64 +177,78 @@ const Post = () => {
           <Title>{post?.title}</Title>
           <Content>{post?.desc}</Content>
           <ImgContainer>
-            <img src={post?.img} />
+            <img src={post?.img} alt="post cover" />
           </ImgContainer>
           <PostBody>
             <div dangerouslySetInnerHTML={{ __html: post?.content }} />
           </PostBody>
           <ShareSocialIcons>
-            <h1>Pin </h1>
-            <div>
-              <SocialIcons>
-                <Icon
-                  disabled={loading}
-                  onClick={() => {
-                    setLoading(true);
-                    axios
-                      .put(
-                        `pinned/find/${currentUser._id}/`,
+            {currentUser.credential >= 1 && (
+              <>
+                <h1>Pin </h1>
 
-                        { userIdAndPostId: `${currentUser._id}|${post._id}` },
-                        {
-                          headers: {
-                            token: `Bearer ${currentUser.accessToken}`,
-                          },
-                        }
-                      )
-                      .then((res) => {
-                        console.log("pinned", res);
-                      })
-                      .catch((err) => {
-                        console.log(err);
-                        alert("it is already in your pinned list");
-                      })
-                      .finally(() => setLoading(false));
-                  }}
-                >
-                  <PushPinIcon />
-                </Icon>
-              </SocialIcons>
-              <LikesAndDislikes>
-                <button
-                  disabled={loading}
-                  onClick={() => handleLikeAndDislike("like")}
-                >
-                  <span>{post?.numberOfLikes}</span>
-                  <div>
-                    <ThumbUpAltIcon />
-                  </div>
-                </button>
-                <button
-                  disabled={loading}
-                  onClick={() => handleLikeAndDislike("dislike")}
-                >
-                  <span>{post?.numberOfDisLikes}</span>
-                  <div>
-                    <ThumbDownIcon />
-                  </div>
-                </button>
-              </LikesAndDislikes>
-            </div>
+                <div>
+                  <SocialIcons>
+                    <Icon
+                      disabled={loading}
+                      onClick={() => {
+                        setLoading(true);
+                        axios
+                          .put(
+                            `pinned/find/${currentUser._id}/`,
+
+                            { postId: `${post._id}` },
+                            {
+                              headers: {
+                                token: `Bearer ${currentUser.accessToken}`,
+                              },
+                            }
+                          )
+                          .then((res) => {
+                            console.log("pinned", res);
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                            alert("it is already in your pinned list");
+                          })
+                          .finally(() => {
+                            setLoading(false);
+                            setX((prev) => (prev += 1));
+                          });
+                      }}
+                      color={isInPinned === "true" ? "#FF2511" : "black"}
+                    >
+                      <PushPinIcon />
+                    </Icon>
+                  </SocialIcons>
+                  <LikesAndDislikes
+                    likeColor={likeStatus === "like" ? "#FF2511" : "black"}
+                    disLikeColor={
+                      likeStatus === "dislike" ? "#FF2511" : "black"
+                    }
+                  >
+                    <button
+                      disabled={loading}
+                      onClick={() => handleLikeAndDislike("like")}
+                    >
+                      <span>{post?.numberOfLikes}</span>
+                      <div>
+                        <ThumbUpAltIcon />
+                      </div>
+                    </button>
+                    <button
+                      disabled={loading}
+                      onClick={() => handleLikeAndDislike("dislike")}
+                    >
+                      <span>{post?.numberOfDisLikes}</span>
+                      <div>
+                        <ThumbDownIcon />
+                      </div>
+                    </button>
+                  </LikesAndDislikes>
+                </div>
+              </>
+            )}
           </ShareSocialIcons>
           <CommentSection>
             <h1>Comments</h1>
@@ -250,85 +264,26 @@ const Post = () => {
                 </CommentContent>
               </Comment>
             ))}
-            <CommentForm onSubmit={handleSubmit}>
-              <h3>Leave a Comment</h3>
-              <textarea
-                label="Enter Your Comment"
-                name="commentText"
-                required
-                value={commentState}
-                onChange={(e) => {
-                  setComment(e.target.value);
-                }}
-              />
-              <button type="submit" disabled={loading}>
-                Add Comment
-              </button>
-            </CommentForm>
+            {currentUser.credential >= 1 && (
+              <>
+                <CommentForm onSubmit={handleSubmit}>
+                  <h3>Leave a Comment</h3>
+                  <textarea
+                    label="Enter Your Comment"
+                    name="commentText"
+                    required
+                    value={commentState}
+                    onChange={(e) => {
+                      setComment(e.target.value);
+                    }}
+                  />
+                  <button type="submit" disabled={loading}>
+                    Add Comment
+                  </button>
+                </CommentForm>
+              </>
+            )}
           </CommentSection>
-          {/* <RelatedPosts>
-        <h1>Related</h1>
-        <RelatedPost>
-          <RelatedImgContainer>
-            <img src={post?.imgUrl} />
-          </RelatedImgContainer>
-          <RelatedInfoContainer>
-            <DateAndCats>
-              <span>{post?.catagories?.join(" - ")}</span>
-              <span> {post?.date}</span>
-            </DateAndCats>
-            <RelatedTitle>{post?.title}</RelatedTitle>
-            <RelatedContent>{post?.content}</RelatedContent>
-            <WriterInfo>
-              <RelatedAvatar></RelatedAvatar>
-              <RelatedInfo>
-                <div>{post?.username}</div>
-                <div>{post?.userJob}</div>
-              </RelatedInfo>
-            </WriterInfo>
-          </RelatedInfoContainer>
-        </RelatedPost>
-        <RelatedPost>
-          <RelatedImgContainer>
-            <img src={post?.imgUrl} />
-          </RelatedImgContainer>
-          <RelatedInfoContainer>
-            <DateAndCats>
-              <span>{post.catagories.join(" - ")}</span>
-              <span> {post?.date}</span>
-            </DateAndCats>
-            <RelatedTitle>{post?.title}</RelatedTitle>
-            <RelatedContent>{post?.content}</RelatedContent>
-            <WriterInfo>
-              <RelatedAvatar></RelatedAvatar>
-              <RelatedInfo>
-                <div>{post?.username}</div>
-                <div>{post?.userJob}</div>
-              </RelatedInfo>
-            </WriterInfo>
-          </RelatedInfoContainer>
-        </RelatedPost>
-        <RelatedPost>
-          <RelatedImgContainer>
-            <img src={post?.imgUrl} />
-          </RelatedImgContainer>
-          <RelatedInfoContainer>
-            <DateAndCats>
-              <span>{post.catagories.join(" - ")}</span>
-              <span> {post?.date}</span>
-            </DateAndCats>
-            <RelatedTitle>{post?.title}</RelatedTitle>
-            <RelatedContent>{post?.content}</RelatedContent>
-            <WriterInfo>
-              <RelatedAvatar></RelatedAvatar>
-              <RelatedInfo>
-                <div>{post?.username}</div>
-                <div>{post?.userJob}</div>
-              </RelatedInfo>
-            </WriterInfo>
-          </RelatedInfoContainer>
-        </RelatedPost>
-      </RelatedPosts> */}
         </Wrapper>
       )}
     </>

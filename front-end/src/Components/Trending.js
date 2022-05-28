@@ -92,45 +92,47 @@ const Trending = ({ posts: fetchedPosts }) => {
         <Wrapper>
           <h1>Trending</h1>
           <Posts>
-            {posts?.map((post) => (
-              <Post
-                sliderNo={sliderNo}
-                key={`${post._id}+trending`}
-                onClick={() => handleNavigate(post)}
-              >
-                <ImgContainer>
-                  <img src={post?.img} />
-                </ImgContainer>
-                <InfoContainer>
-                  <DateAndCats>
-                    <span>{post?.categories?.join(" - ")}</span>
-                    <span>
-                      {" "}
-                      {`${extractDate(post?.createdAt).month} ${
-                        extractDate(post?.createdAt).day
-                      } , ${extractDate(post?.createdAt).year}`}
-                    </span>
-                  </DateAndCats>
-                  <Title>{post?.title.slice(0, 80)}</Title>
-                  <Content>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: post?.desc.slice(0, 200),
-                      }}
-                    />
-                  </Content>
-                  <WriterInfo>
-                    <Avatar>
-                      <img src={post.user?.avatar} alt="author pic" />
-                    </Avatar>
-                    <Info>
-                      <div>{post?.user?.username}</div>
-                      <div>{post?.user?.job}</div>
-                    </Info>
-                  </WriterInfo>
-                </InfoContainer>
-              </Post>
-            ))}
+            {posts
+              ?.sort((a, b) => b.comments?.length - a.comments?.length)
+              .map((post) => (
+                <Post
+                  sliderNo={sliderNo}
+                  key={`${post._id}+trending`}
+                  onClick={() => handleNavigate(post)}
+                >
+                  <ImgContainer>
+                    <img src={post?.img} />
+                  </ImgContainer>
+                  <InfoContainer>
+                    <DateAndCats>
+                      <span>{post?.categories?.join(" - ")}</span>
+                      <span>
+                        {" "}
+                        {`${extractDate(post?.createdAt).month} ${
+                          extractDate(post?.createdAt).day
+                        } , ${extractDate(post?.createdAt).year}`}
+                      </span>
+                    </DateAndCats>
+                    <Title>{post?.title.slice(0, 80)}</Title>
+                    <Content>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: post?.desc.slice(0, 200),
+                        }}
+                      />
+                    </Content>
+                    <WriterInfo>
+                      <Avatar>
+                        <img src={post.user?.avatar} alt="author pic" />
+                      </Avatar>
+                      <Info>
+                        <div>{post?.user?.username}</div>
+                        <div>{post?.user?.job}</div>
+                      </Info>
+                    </WriterInfo>
+                  </InfoContainer>
+                </Post>
+              ))}
           </Posts>
           <Buttons>
             <button onClick={() => handleSliding("prev")}>Prev</button>

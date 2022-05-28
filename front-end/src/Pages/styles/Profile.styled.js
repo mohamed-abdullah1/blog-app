@@ -72,6 +72,11 @@ export const Post = styled.div`
   margin-bottom: 30px;
   height: 200px;
   cursor: pointer;
+  & > h3 {
+    font-size: 30px;
+    font-weight: 200;
+    margin-bottom: 300px;
+  }
 `;
 export const ImgContainer = styled.div`
   width: 22%;

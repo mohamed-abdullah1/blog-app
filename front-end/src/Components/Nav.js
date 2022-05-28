@@ -55,7 +55,9 @@ const Nav = () => {
   };
   useEffect(() => {
     axios
-      .get("posts/")
+      .get("posts/", {
+        headers: { token: `Bearer ${currentUser?.accessToken}` },
+      })
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -64,7 +66,7 @@ const Nav = () => {
       <NavContainer>
         <Search posts={posts} />
         <Logo>
-          <h1 onClick={() => navigate("/")}>BLOG</h1>
+          <h1 onClick={() => navigate("/")}>لا غالب الا الله</h1>
         </Logo>
         <NavbarContainer>
           <SocialIcons>
@@ -118,26 +120,34 @@ const Nav = () => {
                   </NavMenuIcon>
                   <NavMenuTitle>{currentUser?.username}</NavMenuTitle>
                 </li>
-                <li onClick={() => navigate(`makePost`)}>
-                  <NavMenuIcon>
-                    <PostAddIcon />
-                  </NavMenuIcon>
-                  <NavMenuTitle>Make Post</NavMenuTitle>
-                </li>
-                <li
-                  onClick={() => navigate(`/pinnedPosts/${currentUser?._id}`)}
-                >
-                  <NavMenuIcon>
-                    <PushPinIcon />
-                  </NavMenuIcon>
-                  <NavMenuTitle>Pinned Posts</NavMenuTitle>
-                </li>
-                <li onClick={() => navigate(`/contact`)}>
-                  <NavMenuIcon>
-                    <MessageIcon />
-                  </NavMenuIcon>
-                  <NavMenuTitle>contact admin</NavMenuTitle>
-                </li>
+                {currentUser?.credential >= 1 && (
+                  <>
+                    <li onClick={() => navigate(`makePost`)}>
+                      <NavMenuIcon>
+                        <PostAddIcon />
+                      </NavMenuIcon>
+                      <NavMenuTitle>Make Post</NavMenuTitle>
+                    </li>
+                    <li
+                      onClick={() =>
+                        navigate(`/pinnedPosts/${currentUser?._id}`)
+                      }
+                    >
+                      <NavMenuIcon>
+                        <PushPinIcon />
+                      </NavMenuIcon>
+                      <NavMenuTitle>Pinned Posts</NavMenuTitle>
+                    </li>
+                    {currentUser.credential !== 2 && (
+                      <li onClick={() => navigate(`/contact`)}>
+                        <NavMenuIcon>
+                          <MessageIcon />
+                        </NavMenuIcon>
+                        <NavMenuTitle>contact admin</NavMenuTitle>
+                      </li>
+                    )}
+                  </>
+                )}
                 <li onClick={handleLogout}>
                   <NavMenuIcon>
                     <LogoutIcon />
@@ -167,20 +177,20 @@ const Nav = () => {
               <FaTimes />
             </CrossIcon>
             <ul>
-              <li onClick={() => navigate("/dashboard")}>
+              <li onClick={() => navigate("/admin")}>
                 <NavMenuIcon>
                   <DashboardIcon />
                 </NavMenuIcon>
                 <NavMenuTitle>Dashboard</NavMenuTitle>
               </li>
-              <li onClick={() => navigate("/users")}>
+              <li onClick={() => navigate("/allUsers")}>
                 <NavMenuIcon>
                   <PeopleIcon />
                 </NavMenuIcon>
                 <NavMenuTitle>Users</NavMenuTitle>
               </li>
 
-              <li onClick={() => navigate("/users")}>
+              <li onClick={() => navigate("/allPosts")}>
                 <NavMenuIcon>
                   <ArticleRoundedIcon />
                 </NavMenuIcon>

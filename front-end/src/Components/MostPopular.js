@@ -57,34 +57,37 @@ const MostPopular = ({ posts: fetchedPosts }) => {
         </div>
       ) : (
         <Posts>
-          {posts?.slice(0, 6).map((post) => (
-            <Post
-              key={`${post._id}+mostPopular`}
-              onClick={() => handleNavigate(post)}
-              style={{ cursor: "pointer" }}
-            >
-              <ImgContainer>
-                <img src={post?.img} />
-              </ImgContainer>
-              <InfoContainer>
-                <DateAndCats>
-                  <span>{post?.catagories?.join(" - ")}</span>
-                  <span> {post?.date}</span>
-                </DateAndCats>
-                <Title>{post?.title}</Title>
-                <Content>{post?.desc.slice(0, 100)}</Content>
-                <WriterInfo>
-                  <Avatar>
-                    <img src={post?.user?.avatar} />
-                  </Avatar>
-                  <Info>
-                    <div>{post?.user.username}</div>
-                    <div>{post?.user.job}</div>
-                  </Info>
-                </WriterInfo>
-              </InfoContainer>
-            </Post>
-          ))}
+          {posts
+            ?.sort((a, b) => b.numberOfLikes - a.numberOfLikes)
+            .slice(0, 6)
+            .map((post) => (
+              <Post
+                key={`${post._id}+mostPopular`}
+                onClick={() => handleNavigate(post)}
+                style={{ cursor: "pointer" }}
+              >
+                <ImgContainer>
+                  <img src={post?.img} />
+                </ImgContainer>
+                <InfoContainer>
+                  <DateAndCats>
+                    <span>{post?.catagories?.join(" - ")}</span>
+                    <span> {post?.date}</span>
+                  </DateAndCats>
+                  <Title>{post?.title}</Title>
+                  <Content>{post?.desc.slice(0, 100)}</Content>
+                  <WriterInfo>
+                    <Avatar>
+                      <img src={post?.user?.avatar} />
+                    </Avatar>
+                    <Info>
+                      <div>{post?.user.username}</div>
+                      <div>{post?.user.job}</div>
+                    </Info>
+                  </WriterInfo>
+                </InfoContainer>
+              </Post>
+            ))}
         </Posts>
       )}
     </Wrapper>

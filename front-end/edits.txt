@@ -78,10 +78,10 @@ For Admin
 Admin(influencer) functionality:
 o View topics posted
 o Statics of websites:
- Number of users that signed up
- Number of posts
- The post with the most interaction
- Number of reaches(+B) //
+     Number of users that signed up
+     Number of posts
+     The post with the most interaction
+     Number of reaches(+B) //
 o Post, Modify, Delete a posted topic //
 o The admin can remove customers //
 
@@ -109,3 +109,10 @@ o The admin can remove customers //
 //likeOrDislike
 // userId , postId 
 // return like , dislike , none 
+
+
+//admin 
+remove the contact from navbar
+//add contact in admin
+//enable routing and contact in the table of users
+//enable like 

@@ -4,11 +4,15 @@ import MostPopular from "../Components/MostPopular";
 import Catagories from "../Components/Catagories";
 import axios from "../Api/axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 const Home = () => {
   const [posts, setPosts] = useState([]);
+  const { accessToken } = useSelector((state) => state.user);
   useEffect(() => {
     axios
-      .get("posts/")
+      .get("posts/", {
+        headers: { token: `Bearer ${accessToken}` },
+      })
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err));
   }, []);

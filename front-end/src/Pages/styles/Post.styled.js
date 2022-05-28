@@ -53,8 +53,11 @@ export const ImgContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 20px;
+  max-width: 1000px;
   & > img {
     border-radius: 20px;
+    object-fit: cover;
+    width: 100%;
   }
 `;
 export const PostBody = styled.div`
@@ -108,6 +111,7 @@ export const SocialIcons = styled.div`
 export const Icon = styled.button`
   cursor: pointer;
   background-color: white;
+  color: ${(props) => props.color};
   transform: scale(1.3);
   &:disabled {
     opacity: 0.7;
@@ -243,6 +247,7 @@ export const LikesAndDislikes = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   & > button {
     display: flex;
     justify-content: center;
@@ -253,14 +258,25 @@ export const LikesAndDislikes = styled.div`
       opacity: 0.8;
       cursor: not-allowed;
     }
+    & > span {
+      font-size: 20px;
+      margin-right: 5px;
+    }
     & > div {
-      transition: all 0.5s ease-in-out;
+      transition: all 0s ease-in-out;
+      transform: scale(1.2);
       // this is the like and dislike btn
       &:hover {
         color: red;
         transform: scale(1.1);
       }
     }
+  }
+  & > button:first-child {
+    color: ${(props) => props.likeColor};
+  }
+  & > button:last-child {
+    color: ${(props) => props.disLikeColor};
   }
 `;
 export const CommentForm = styled.form`

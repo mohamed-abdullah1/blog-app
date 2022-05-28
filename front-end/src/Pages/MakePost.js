@@ -64,7 +64,7 @@ const MakePost = ({ categoriesOptions: cats }) => {
       .put(
         `posts/${state._id}`,
         {
-          writer_id: currentUser._id,
+          writer_id: state.writer_id,
           title,
           desc,
           img,
@@ -76,8 +76,8 @@ const MakePost = ({ categoriesOptions: cats }) => {
         }
       )
       .then((res) => {
-        console.log(res);
-        navigate(`/profile/${currentUser._id}`);
+        console.log("res of update", res);
+        navigate(`/profile/${state.writer_id}`);
       })
       .catch((err) => {
         console.log(err);
@@ -89,6 +89,7 @@ const MakePost = ({ categoriesOptions: cats }) => {
   };
   useEffect(() => {
     console.log("make cats", categoriesOptions);
+    console.log("state", state);
     if (state) {
       setTitle(state?.title);
       setDesc(state?.desc);
@@ -114,7 +115,10 @@ const MakePost = ({ categoriesOptions: cats }) => {
           variant="outlined"
           required
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            console.log(e.target.value);
+          }}
         />
       </div>
       <div>

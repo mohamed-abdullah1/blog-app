@@ -52,12 +52,8 @@ export const PinnedPosts = () => {
     return { month, day, year };
   };
   const getPostAndUser = async (post) => {
-    console.log("post", post);
-    console.log("postId", post.userIdAndPostId.split("|"));
     try {
-      const postResponse = await axios.get(
-        `posts/find/${post.userIdAndPostId.split("|")[1]}`
-      );
+      const postResponse = await axios.get(`posts/find/${post.postId}`);
       const userResponse = await axios.get(
         `users/find/${postResponse.data.writer_id}`
       );
@@ -83,13 +79,12 @@ export const PinnedPosts = () => {
       .get(`pinned/find/${currentUser._id}`, {
         headers: { token: `Bearer ${currentUser.accessToken}` },
       })
-      .then(async (res) => {
+      .then((res) => {
         console.log("res", res);
         setNumOfPinned(res.data.posts.length);
-        const posts_ = await res.data.posts?.map((post) =>
-          getPostAndUser(post)
-        );
+        return res;
       })
+      .then((res) => res.data.posts?.map((post) => getPostAndUser(post)))
       .catch((err) => {
         console.log(err);
         alert("there is something wrong");
@@ -101,13 +96,15 @@ export const PinnedPosts = () => {
 
   const handleDelete = (post) => {
     console.log(post._id);
-    // const data = { postId: post._id };
-    // console.log(data);
     axios
-      .delete(`pinned/find/${currentUser._id}`, { data: { postId: post._id } })
+      .put(
+        `pinned/find/${currentUser._id}`,
+        { postId: post._id },
+        { headers: { token: `Bearer ${currentUser.accessToken}` } }
+      )
       .then((res) => {
         console.log("rssss", res);
-        setX((prev) => (prev += 1));
+        navigate(`/post/${post._id}`, { state: post });
       })
       .catch((err) => console.log(err));
   };
@@ -115,7 +112,7 @@ export const PinnedPosts = () => {
     <>
       <Posts>
         <h1>Posts</h1>
-        {loading ? (
+        {loading && posts?.length > 0 ? (
           <div
             style={{
               display: "flex",
@@ -154,7 +151,7 @@ export const PinnedPosts = () => {
                       <div>{post.user?.job}</div>
                     </Info>
                   </WriterInfo>
-                  <form onClick={() => handleDelete(post)}>
+                  <div onClick={() => handleDelete(post)}>
                     <button
                       style={{
                         width: "60px",
@@ -174,7 +171,7 @@ export const PinnedPosts = () => {
                     >
                       delete
                     </button>
-                  </form>
+                  </div>
                 </Container>
               </InfoContainer>
             </Post>

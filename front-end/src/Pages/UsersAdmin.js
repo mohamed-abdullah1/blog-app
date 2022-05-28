@@ -5,6 +5,8 @@ import Button from "@mui/material/Button";
 import axios from "../Api/axios";
 import { useSelector } from "react-redux";
 import MoonLoader from "react-spinners/MoonLoader";
+import { ButtonsContainer } from "./styles/PostsAdmin.styled";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { field: "_id", headerName: "ID", width: 100 },
@@ -21,6 +23,8 @@ const Users = () => {
   const [deletedRowsIds, setDeletedRowsIds] = useState([]);
   const { accessToken } = useSelector((state) => state.user.currentUser);
   const [response, setResponse] = useState({ done: false });
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
   //handlers
   const handleSelection = (rowsSelected) => {
     setDeletedRowsIds(rowsSelected);
@@ -30,6 +34,18 @@ const Users = () => {
     deletedRowsIds.forEach((rowId) => {
       deleteUser(rowId);
     });
+  };
+  const handleViewProfile = () => {
+    deletedRowsIds.length > 0 &&
+      navigate(
+        `/profile/${users?.find((user) => user._id === deletedRowsIds[0])._id}`
+      );
+  };
+  const handleContact = () => {
+    deletedRowsIds.length > 0 &&
+      navigate(`/contact/`, {
+        state: users?.find((user) => user._id === deletedRowsIds[0]),
+      });
   };
   //async functions
   const getUsers = async () => {
@@ -50,6 +66,7 @@ const Users = () => {
           .filter((user) => user.credentials !== 2)
           .reverse()
       );
+      setUsers(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -89,29 +106,64 @@ const Users = () => {
               <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={10}
+                pageSize={20}
                 rowsPerPageOptions={[10]}
-                checkboxSelection
                 onSelectionModelChange={handleSelection}
                 getRowId={(row) => row._id}
-                sx={{ fontSize: "15px", fontWeight: "700" }}
+                sx={{
+                  fontSize: "15px",
+                  fontWeight: "700",
+                  textAlign: "center",
+                }}
               />
             </div>
-            <div>
-              <Button
-                sx={{
-                  bgcolor: "#060b26",
-                  "&:hover": {
-                    bgcolor: "#1a83ff",
-                  },
-                }}
-                variant="contained"
-                onClick={handleDelete}
-                color="error"
-              >
-                Delete Selected Rows
-              </Button>
-            </div>
+            <ButtonsContainer>
+              <div>
+                <Button
+                  sx={{
+                    bgcolor: "#060b26",
+                    "&:hover": {
+                      bgcolor: "#f79918",
+                    },
+                  }}
+                  variant="contained"
+                  onClick={handleDelete}
+                  color="error"
+                >
+                  Delete
+                </Button>
+              </div>
+              <div>
+                <Button
+                  sx={{
+                    bgcolor: "#060b26",
+                    "&:hover": {
+                      bgcolor: "#f79918",
+                    },
+                  }}
+                  variant="contained"
+                  onClick={handleViewProfile}
+                  color="error"
+                >
+                  View Profile
+                </Button>
+              </div>
+              <div>
+                <Button
+                  sx={{
+                    bgcolor: "#060b26",
+                    "&:hover": {
+                      bgcolor: "#f79918",
+                    },
+                  }}
+                  variant="contained"
+                  onClick={handleContact}
+                  color="error"
+                >
+                  Contact
+                </Button>
+              </div>
+            </ButtonsContainer>
           </Wrapper>
         </Container>
       ) : (

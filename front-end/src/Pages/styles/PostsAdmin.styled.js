@@ -20,3 +20,10 @@ export const Wrapper = styled.div`
     margin-top: 10px;
   }
 `;
+export const ButtonsContainer = styled.div`
+  width: 100%;
+  display: flex;
+  & > div:not(:first-child) {
+    margin-left: 20px;
+  }
+`;

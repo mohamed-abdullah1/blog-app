@@ -20,6 +20,7 @@ import {
   Container,
   Buttons,
 } from "./styles/Profile.styled";
+import MoonLoader from "react-spinners/MoonLoader";
 import axios from "../Api/axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -65,8 +66,8 @@ const Profile = () => {
     navigate(`/post/${post._id}`, {
       state: {
         user: {
-          avatar: currentUser?.avatar,
-          username: currentUser?.username,
+          avatar: user?.avatar,
+          username: user?.username,
         },
         ...post,
       },
@@ -153,67 +154,81 @@ const Profile = () => {
 
           <Posts>
             <h1>Posts</h1>
-            {posts?.map((post) => (
-              <Post key={post?._id}>
-                <ImgContainer>
-                  <img src={post?.img} alt="user img" />
-                </ImgContainer>
-                <InfoContainer>
-                  <DateAndCats>
-                    <span>
-                      {`${extractDate(post?.createdAt).month} ${
-                        extractDate(post?.createdAt).day
-                      } , ${extractDate(post?.createdAt).year}`}
-                    </span>
-                    <span>{post?.categories.join("-")}</span>
-                  </DateAndCats>
-                  <Title>{post?.title}</Title>
-                  <Content>{post?.desc}</Content>
-                  <Container>
-                    <WriterInfo>
-                      <Avatar onClick={() => navigate(`profile/${user._id}`)}>
-                        <img src={user?.avatar} />
-                      </Avatar>
-                      <Info>
-                        <div>{user?.username}</div>
-                        <div>{user?.job}</div>
-                      </Info>
-                    </WriterInfo>
-                    {currentUser._id === idParam && (
-                      <Buttons>
-                        <button onClick={() => handleNavigate(post)}>
-                          view
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            navigate(`/makePost`, { state: post });
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            axios
-                              .delete(`posts/${post._id}`, {
-                                headers: {
-                                  token: `Bearer ${currentUser.accessToken}`,
-                                },
-                              })
-                              .then((res) =>
-                                console.log(res, "post deleted successfully")
-                              )
-                              .catch((err) => alert("try again"));
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </Buttons>
-                    )}
-                  </Container>
-                </InfoContainer>
+            {posts.length > 0 ? (
+              posts.map((post) => (
+                <Post key={post?._id}>
+                  <ImgContainer>
+                    <img src={post?.img} alt="user img" />
+                  </ImgContainer>
+                  <InfoContainer>
+                    <DateAndCats>
+                      <span>
+                        {`${extractDate(post?.createdAt).month} ${
+                          extractDate(post?.createdAt).day
+                        } , ${extractDate(post?.createdAt).year}`}
+                      </span>
+                      <span>{post?.categories.join("-")}</span>
+                    </DateAndCats>
+                    <Title>{post?.title}</Title>
+                    <Content>{post?.desc.slice(0, 100)}</Content>
+                    <Container>
+                      <WriterInfo>
+                        <Avatar onClick={() => navigate(`profile/${user._id}`)}>
+                          <img src={user?.avatar} />
+                        </Avatar>
+                        <Info>
+                          <div>{user?.username}</div>
+                          <div>{user?.job}</div>
+                        </Info>
+                      </WriterInfo>
+                      {currentUser._id === idParam ||
+                      currentUser.credential === 2 ? (
+                        <Buttons>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              navigate(`/makePost`, { state: post });
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button onClick={() => handleNavigate(post)}>
+                            view
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              axios
+                                .delete(`posts/${post._id}`, {
+                                  headers: {
+                                    token: `Bearer ${currentUser.accessToken}`,
+                                  },
+                                })
+                                .then((res) =>
+                                  console.log(res, "post deleted successfully")
+                                )
+                                .catch((err) => alert("try again"));
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </Buttons>
+                      ) : (
+                        <Buttons>
+                          <button onClick={() => handleNavigate(post)}>
+                            view
+                          </button>
+                        </Buttons>
+                      )}
+                    </Container>
+                  </InfoContainer>
+                </Post>
+              ))
+            ) : (
+              <Post>
+                <h3>No Posts To Show.....</h3>
               </Post>
-            ))}
+            )}
           </Posts>
         </>
       )}

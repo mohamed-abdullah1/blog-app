@@ -28,13 +28,19 @@ const Pay = () => {
         console.log("response", res);
         if (res.status === 200) {
           setLoading(true);
+          console.log("location", location.state);
           axios
             .post("auth/register/", { ...location.state })
             .then((res) => {
-              return axios.post("pinned/", {
-                userId: res.data._id,
-                posts: [],
-              });
+              console.log("res", res);
+              return axios.post(
+                "pinned/",
+                {
+                  userId: res.data._id,
+                  posts: [],
+                },
+                { headers: { token: `Bearer ${res.data.accessToken}` } }
+              );
             })
             .then((res) => {
               navigate("/login");

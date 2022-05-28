@@ -1,10 +1,15 @@
-import { Container, Wrapper } from "./styles/PostsAdmin.styled";
+import {
+  ButtonsContainer,
+  Container,
+  Wrapper,
+} from "./styles/PostsAdmin.styled";
 import { DataGrid } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import axios from "../Api/axios";
 import { useSelector } from "react-redux";
 import MoonLoader from "react-spinners/MoonLoader";
+import { useNavigate } from "react-router-dom";
 
 const columns = [
   { field: "_id", headerName: "ID", width: 100 },
@@ -22,6 +27,9 @@ const Products = () => {
   const [rows, setRows] = useState();
   const [deletedRowsIds, setDeletedRowsIds] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
   //######################################
 
   //handlers
@@ -34,12 +42,25 @@ const Products = () => {
       deleteProduct(rowId);
     });
   };
+  const handleView = () => {
+    // console.log("deletedRowsIds", deletedRowsIds);
+    deletedRowsIds.length > 0 &&
+      navigate(`/post/${deletedRowsIds[0]?._id}`, {
+        state: posts.find((post) => post._id === deletedRowsIds[0]),
+      });
+  };
+  const handleEdit = () => {
+    deletedRowsIds.length > 0 &&
+      navigate(`/makePost`, {
+        state: posts.find((post) => post._id === deletedRowsIds[0]),
+      });
+  };
   //######################################
 
   //useEffects
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [loading]);
   //######################################
 
   //async functions
@@ -58,11 +79,23 @@ const Products = () => {
           }))
           .reverse()
       );
+      res.data.map(async (post) => {
+        try {
+          const userResponse = await axios.get(`users/find/${post.writer_id}`);
+          // console.log("post from trending", { ...post, user: userResponse.data });
+          setPosts((prev) => [...prev, { ...post, user: userResponse.data }]);
+          return;
+        } catch (err) {
+          alert(`can't get the user`);
+          return;
+        }
+      });
     } catch (err) {
       console.log(err);
     }
   };
   const deleteProduct = async (postId) => {
+    setLoading(true);
     try {
       const res = await axios.delete(`posts/${postId}`, {
         headers: {
@@ -70,8 +103,12 @@ const Products = () => {
         },
       });
       console.log(res);
+      setLoading(false);
+      alert("deleted successfully");
     } catch (err) {
       console.log(err);
+      setLoading(false);
+      alert("there is problem in deleting");
     }
   };
   //######################################
@@ -95,7 +132,6 @@ const Products = () => {
                 columns={columns}
                 pageSize={20}
                 rowsPerPageOptions={[10]}
-                checkboxSelection
                 onSelectionModelChange={handleSelection}
                 getRowId={(row) => row._id}
                 sx={{
@@ -105,22 +141,59 @@ const Products = () => {
                 }}
               />
             </div>
-            <div>
-              <Button
-                sx={{
-                  bgcolor: "#060b26",
-                  padding: "20px 10px",
-                  fontWeigh: "800",
-                  "&:hover": {
-                    bgcolor: "#1a83ff",
-                  },
-                }}
-                variant="contained"
-                onClick={handleDelete}
-              >
-                Delete Selected Rows
-              </Button>
-            </div>
+            <ButtonsContainer>
+              <div>
+                <Button
+                  sx={{
+                    bgcolor: "#060b26",
+                    padding: "10px 20px",
+                    fontWeigh: "800",
+                    "&:hover": {
+                      bgcolor: "#f79918",
+                    },
+                  }}
+                  variant="contained"
+                  onClick={handleDelete}
+                  disabled={loading}
+                >
+                  Delete
+                </Button>
+              </div>
+              <div>
+                <Button
+                  sx={{
+                    bgcolor: "#060b26",
+                    padding: "10px 20px",
+                    fontWeigh: "800",
+                    "&:hover": {
+                      bgcolor: "#f79918",
+                    },
+                  }}
+                  variant="contained"
+                  onClick={handleView}
+                  disabled={loading}
+                >
+                  View
+                </Button>
+              </div>
+              <div>
+                <Button
+                  sx={{
+                    bgcolor: "#060b26",
+                    padding: "10px 20px",
+                    fontWeigh: "800",
+                    "&:hover": {
+                      bgcolor: "#f79918",
+                    },
+                  }}
+                  variant="contained"
+                  disabled={loading}
+                  onClick={handleEdit}
+                >
+                  Edit
+                </Button>
+              </div>
+            </ButtonsContainer>
           </Wrapper>
         </Container>
       ) : (
